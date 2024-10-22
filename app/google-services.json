@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "327260001937",
+    "project_id": "iu-mobile-app-project",
+    "storage_bucket": "iu-mobile-app-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327260001937:android:6c8a6775fa000aa30e1130",
+        "android_client_info": {
+          "package_name": "com.mobile_app.project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnXL_M3n-Fj3FTNFz9cEFCSC_Q5b_y3xI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
