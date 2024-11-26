@@ -12,11 +12,46 @@ import androidx.core.view.WindowCompat
 
 private val DarkColorScheme =
     darkColorScheme(
-        primary = Red100,
-        secondary = Black200,
-        tertiary = Black100,
-        inversePrimary = White100,
+        // Primary colors: Main theme color and associated variations.
+        primary = primary,
+        onPrimary = on_primary,
+        primaryContainer = primary_variant,
+        onPrimaryContainer = on_primary,
+
+        // Secondary colors: Supporting color and its variations.
+        secondary = secondary,
+        onSecondary = on_secondary,
+        secondaryContainer = secondary_variant,
+        onSecondaryContainer = on_secondary,
+
+        // Tertiary colors: Additional accent color and its variations.
+        tertiary = tertiary,
+        onTertiary = on_tertiary,
+        tertiaryContainer = tertiary_container,
+        onTertiaryContainer = on_tertiary_container,
+
+        // Background and surface: Define the app background and other surfaces.
+        background = primary_background,
+        onBackground = on_background,
+        surface = surface,
+        onSurface = on_background,
+        surfaceVariant = elevated_surface,
+        onSurfaceVariant = on_background,
+
+        // Error colors: Indicate errors and their related states.
+        error = error,
+        onError = on_error,
+        errorContainer = warning,
+        onErrorContainer = on_error,
+
+        // Outlines and borders: Used for UI elements like input borders.
+        outline = borders,
+        outlineVariant = divider,
+
+        // Scrim: Used for modal overlays.
+        scrim = scrim
     )
+
 
 @Composable
 fun MobileAppProjectTheme(
