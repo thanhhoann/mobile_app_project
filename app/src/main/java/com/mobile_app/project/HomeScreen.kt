@@ -42,6 +42,26 @@ fun TopBar() {
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Profile Icon
+        Icon(
+            imageVector = Icons.Default.Person,
+            contentDescription = "Profile",
+            tint = on_background, // From color.kt
+            modifier = Modifier.size(16.dp)
+        )
+
+        Spacer(modifier = Modifier.width(16.dp)) // Space between icons
+
+        // Search Icon
+        Icon(
+            imageVector = Icons.Default.Search,
+            contentDescription = "Search",
+            tint = on_background,
+            modifier = Modifier.size(16.dp)
+        )
+
+        Spacer(modifier = Modifier.width(16.dp)) // Space between icons and search bar
+
         // Search Bar
         TextField(
             value = "", // Replace with a state variable to handle user input
@@ -58,28 +78,9 @@ fun TopBar() {
                 .height(32.dp)
                 .clip(RoundedCornerShape(24.dp)) // Rounded corners for search bar
         )
-
-        Spacer(modifier = Modifier.width(16.dp)) // Space between search bar and icons
-
-        // Search Icon
-        Icon(
-            imageVector = Icons.Default.Search,
-            contentDescription = "Search",
-            tint = on_background, // From color.kt
-            modifier = Modifier.size(16.dp)
-        )
-
-        Spacer(modifier = Modifier.width(16.dp)) // Space between icons
-
-        // Profile Icon
-        Icon(
-            imageVector = Icons.Default.Person,
-            contentDescription = "Profile",
-            tint = on_background,
-            modifier = Modifier.size(16.dp)
-        )
     }
 }
+
 
 
 @Composable
