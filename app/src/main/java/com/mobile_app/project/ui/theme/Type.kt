@@ -31,7 +31,7 @@ val Typography = Typography(
     headlineMedium = TextStyle(
         fontFamily = CinzelDecoratvie,
         fontWeight = FontWeight.Black,
-        fontSize = 30.sp
+        fontSize = 15.sp
     ),
 
     // Used for body text heading
