@@ -79,6 +79,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     // Also add the dependency for the Google Play services library and specify its version
     implementation("com.google.android.gms:play-services-auth:21.2.0")
+    // Splash screen
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
 
     // Retrofit (for Networking)
     implementation 'com.squareup.retrofit2:retrofit:2.11.0'

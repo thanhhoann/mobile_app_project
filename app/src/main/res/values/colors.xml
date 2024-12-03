@@ -1,10 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Bright red for primary actions (e.g., buttons, highlights). -->
+    <color name="primary">#E50914</color>
+
+    <!-- Darker red for pressed/hover states of primary elements. -->
+    <color name="primary_variant">#B00710</color>
+
+    <!-- White text/icons to ensure readability on primary background. -->
+    <color name="on_primary">#FFFFFF</color>
+
+    <!-- Bright gold for secondary buttons or accents. -->
+    <color name="secondary">#FFD700</color>
+
+    <!-- Muted gold for hover/pressed states of secondary elements. -->
+    <color name="secondary_variant">#FFC107</color>
+
+    <!-- Black text/icons to contrast with secondary backgrounds. -->
+    <color name="on_secondary">#000000</color>
+
+    <!-- Cyan for tertiary elements like links, badges, or special highlights. -->
+    <color name="tertiary">#00BCD4</color>
+
+    <!-- White text/icons for readability on tertiary background. -->
+    <color name="on_tertiary">#FFFFFF</color>
+
+    <!-- Light cyan for container backgrounds. -->
+    <color name="tertiary_container">#B2EBF2</color>
+
+    <!-- Dark teal for text/icons on `tertiary_container`. -->
+    <color name="on_tertiary_container">#005662</color>
+
+    <!-- Dark gray/black for the main app background. -->
+    <color name="primary_background">#121212</color>
+
+    <!-- Muted blue for sections or specific UI elements. -->
+    <color name="secondary_background">#3949AB</color>
+
+    <!-- Slightly lighter gray for cards, dialogs, or elevated surfaces. -->
+    <color name="elevated_surface">#1E1E1E</color>
+
+    <!-- Neutral dark gray for general surfaces (e.g., modals, menus). -->
+    <color name="surface">#222222</color>
+
+    <!-- Light gray for text/icons on `primary_background` or `surface`. -->
+    <color name="on_background">#E0E0E0</color>
+
+    <!-- Light gray for most text on dark backgrounds. -->
+    <color name="primary_text">#E0E0E0</color>
+
+    <!-- Muted gray for less important text (e.g., subtitles, hints). -->
+    <color name="secondary_text">#757575</color>
+
+    <!-- Darker muted gray for disabled or inactive text. -->
+    <color name="disabled_text">#616161</color>
+
+    <!-- Bright orange for text requiring attention or emphasis. -->
+    <color name="highlight_text">#FF5722</color>
+
+    <!-- Light gray for borders around input fields, containers, etc. -->
+    <color name="borders">#E0E0E0</color>
+
+    <!-- Darker gray for separators (e.g., between list items or sections). -->
+    <color name="divider">#424242</color>
+
+    <!-- Teal for interactive highlights (e.g., active buttons). -->
+    <color name="interactive_states">#1DE9B6</color>
+
+    <!-- Bright teal for hover states of interactive elements. -->
+    <color name="hover_state">#29FFCF</color>
+
+    <!-- Dark teal for pressed states of interactive elements. -->
+    <color name="pressed_state">#00BFA5</color>
+
+    <!-- Light teal for focused input fields or buttons. -->
+    <color name="focus_state">#80CBC4</color>
+
+    <!-- Red for error messages or elements requiring user attention. -->
+    <color name="error">#CF6679</color>
+
+    <!-- White text/icons for readability on error background. -->
+    <color name="on_error">#FFFFFF</color>
+
+    <!-- Bright orange for warnings or caution messages. -->
+    <color name="warning">#FF9800</color>
+
+    <!-- Green for success messages or positive indicators. -->
+    <color name="success">#4CAF50</color>
+
+    <!-- Semi-transparent black (50%) for modal overlays. -->
+    <color name="scrim">#80000000</color>
 </resources>
