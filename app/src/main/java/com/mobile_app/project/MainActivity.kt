@@ -11,24 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.mobile_app.project.ui.theme.MobileAppProjectTheme
 
-
-//class MainActivity : ComponentActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent {
-//            MobileAppProjectTheme {
-//                // A surface container using the 'background' color from the theme
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background,
-//                ) {
-//                    Greeting("Hoan")
-//                }
-//            }
-//        }
-//    }
-//}
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,24 +27,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-//@Composable
-//fun Greeting(
-//    name: String,
-//    modifier: Modifier = Modifier,
-//) {
-//    Text(
-//        text = "Hello $name!",
-//        modifier = modifier,
-//    )
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    MobileAppProjectTheme {
-//        Greeting("Android")
-//    }
-//}
 
 @Preview(showBackground = true)
 @Composable
