@@ -1,4 +1,4 @@
-package com.mobile_app.project
+package com.mobile_app.project.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,11 +19,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.zIndex
+import com.mobile_app.project.R
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(modifier: Modifier = Modifier) {
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         color = primary_background
     ) {
         Column {
@@ -56,12 +57,17 @@ fun TopBar() {
         Spacer(modifier = Modifier.width(16.dp))
 
         // Profile Icon
-        Icon(
-            imageVector = Icons.Default.Person,
-            contentDescription = "Profile",
-            tint = on_background,
-            modifier = Modifier.size(24.dp)
-        )
+        IconButton(
+            onClick = {}
+        ) {
+            Icon(
+                imageVector = Icons.Default.Person,
+                contentDescription = "Profile",
+                tint = on_background,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+
     }
 }
 
