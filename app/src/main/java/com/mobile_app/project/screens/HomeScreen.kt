@@ -1,67 +1,56 @@
-package com.mobile_app.project
+package com.mobile_app.project.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.mobile_app.project.ui.theme.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.zIndex
+import com.mobile_app.project.R
+import com.mobile_app.project.ui.theme.Typography
+import com.mobile_app.project.ui.theme.on_background
+import com.mobile_app.project.ui.theme.primary
+import com.mobile_app.project.ui.theme.primary_background
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(modifier: Modifier = Modifier) {
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         color = primary_background
     ) {
         Column {
-            TopBar()
             FeaturedMovie()
             Spacer(modifier = Modifier.height(32.dp))
             RecommendedMovies()
             Spacer(modifier = Modifier.weight(1f))
         }
-    }
-}
-
-@Composable
-fun TopBar() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.End // Align icons to the right
-    ) {
-        // Search Icon
-        Icon(
-            imageVector = Icons.Default.Search,
-            contentDescription = "Search",
-            tint = on_background,
-            modifier = Modifier.size(24.dp)
-        )
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        // Profile Icon
-        Icon(
-            imageVector = Icons.Default.Person,
-            contentDescription = "Profile",
-            tint = on_background,
-            modifier = Modifier.size(24.dp)
-        )
     }
 }
 
