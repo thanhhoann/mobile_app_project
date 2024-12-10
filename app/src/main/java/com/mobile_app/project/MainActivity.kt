@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
 }
 
 enum class MovieScreens (@StringRes val title: Int) {
-    Home(title = R.string.app_name),
+    Home(title = R.string.home),
     MovieDetails(title = R.string.signup),
 }
 
