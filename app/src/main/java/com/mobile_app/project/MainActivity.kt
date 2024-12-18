@@ -19,6 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mobile_app.project.components.MovieAppBar
 import com.mobile_app.project.screens.HomeScreen
+import com.mobile_app.project.screens.SignUp
 import com.mobile_app.project.ui.theme.MobileAppProjectTheme
 
 
@@ -31,9 +32,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-enum class MovieScreens (@StringRes val title: Int) {
+enum class MovieScreens(@StringRes val title: Int) {
     Home(title = R.string.home),
-    MovieDetails(title = R.string.signup),
+    SignUp(title = R.string.signup),
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,9 +48,12 @@ fun MovieApp() {
     )
     MobileAppProjectTheme {
         Scaffold(
-            modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
             topBar = {
                 MovieAppBar(
+                    navController = navController,
                     currentScreenTitle = currentScreen.title,
                     canNavigateBack = navController.previousBackStackEntry != null,
                     navigateUp = { navController.popBackStack() }
@@ -63,6 +67,10 @@ fun MovieApp() {
             ) {
                 composable(route = MovieScreens.Home.name) {
                     HomeScreen()
+                }
+
+                composable(route = MovieScreens.SignUp.name) {
+                    SignUp()
                 }
             }
         }
