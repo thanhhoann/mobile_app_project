@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -21,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.mobile_app.project.MovieScreens
 import com.mobile_app.project.ui.theme.on_background
 
 
@@ -28,6 +29,7 @@ import com.mobile_app.project.ui.theme.on_background
 @Composable
 fun MovieAppBar(
     @StringRes currentScreenTitle: Int,
+    navController: NavController,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
@@ -38,34 +40,39 @@ fun MovieAppBar(
                 modifier = Modifier
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.Center
             ) {
-                    Text(
-                        modifier = Modifier.padding(start = 90.dp, end = 90.dp),
-                        textAlign = TextAlign.Center,
-                        text = stringResource(currentScreenTitle))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.End
+                Text(
+                    textAlign = TextAlign.Center,
+                    text = stringResource(currentScreenTitle),
+                )
+            }
+        },
+        actions = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+            ) {
+                if (!canNavigateBack) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search",
+                        tint = on_background,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    IconButton(
+                        onClick = {
+                            navController.navigate(MovieScreens.SignUp.name)
+                        }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "Search",
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Profile",
                             tint = on_background,
                             modifier = Modifier.size(24.dp)
                         )
-                        IconButton(
-                            onClick = {}
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Profile",
-                                tint = on_background,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
+                    }
                 }
-
             }
         },
         modifier = modifier,
@@ -77,8 +84,8 @@ fun MovieAppBar(
                         contentDescription = "Back"
                     )
                 }
-            }
-        }
 
+            }
+        },
     )
 }
