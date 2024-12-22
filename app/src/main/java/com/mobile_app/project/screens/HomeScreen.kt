@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,6 +35,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.mobile_app.project.MovieScreens
 import com.mobile_app.project.R
 import com.mobile_app.project.ui.theme.Typography
 import com.mobile_app.project.ui.theme.on_background
@@ -42,13 +46,19 @@ import com.mobile_app.project.ui.theme.primary_background
 
 @Preview(showBackground = true)
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreenPreview() {
+    val navController = rememberNavController() // Mock NavController for preview
+    HomeScreen(navController = navController)
+}
+
+@Composable
+fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier.fillMaxSize(),
         color = primary_background
     ) {
         Column {
-            FeaturedMovie()
+            FeaturedMovie(navController)
             Spacer(modifier = Modifier.height(32.dp))
             RecommendedMovies()
             Spacer(modifier = Modifier.weight(1f))
@@ -57,7 +67,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun FeaturedMovie() {
+fun FeaturedMovie(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -72,7 +82,8 @@ fun FeaturedMovie() {
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .offset(y = 48.dp)
-                .zIndex(1f)
+                .zIndex(1f),
+            navController = navController
         )
 
         // "Watch Trailer" Button (Positioned at the top-right of the image)
@@ -101,10 +112,10 @@ fun ImageBox() {
 }
 
 @Composable
-fun BottomOverlayBox(modifier: Modifier = Modifier) {
+fun BottomOverlayBox(modifier: Modifier = Modifier, navController: NavController) {
     Box(
         modifier = modifier
-            .fillMaxWidth(0.85f) // Keeps the overlay smaller than the image for a cleaner effect
+            .fillMaxWidth(0.85f)
             .height(120.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(Color.DarkGray)
@@ -158,8 +169,9 @@ fun BottomOverlayBox(modifier: Modifier = Modifier) {
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
+                //Go to movie detail screen
                 Button(
-                    onClick = { /* navigate to movie detail */ },
+                    onClick = { navController.navigate(MovieScreens.Detail.name) },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                     modifier = Modifier
                         .height(36.dp)
@@ -186,24 +198,29 @@ fun BottomOverlayBox(modifier: Modifier = Modifier) {
 @Composable
 fun WatchTrailerButton(modifier: Modifier = Modifier) {
     Button(
-        onClick = { /* add later */ },
+        onClick = { /* Add trailer playback */ },
         colors = ButtonDefaults.buttonColors(containerColor = Color.Black.copy(alpha = 0.6f)),
         modifier = modifier
             .padding(8.dp)
             .clip(RoundedCornerShape(16.dp))
     ) {
-        Text(
-            text = "Watch Trailer",
-            color = Color.White,
-            style = Typography.bodySmall,
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
-        Icon(
-            imageVector = Icons.Default.PlayArrow,
-            contentDescription = "Play",
-            tint = Color.White,
-            modifier = Modifier.size(16.dp)
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = "Watch Trailer",
+                color = Color.White,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            Icon(
+                imageVector = Icons.Default.PlayArrow,
+                contentDescription = "Play",
+                tint = Color.White,
+                modifier = Modifier.size(16.dp)
+            )
+        }
     }
 }
 

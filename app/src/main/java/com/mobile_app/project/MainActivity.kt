@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mobile_app.project.components.MovieAppBar
 import com.mobile_app.project.screens.HomeScreen
 import com.mobile_app.project.screens.SignUp
+import com.mobile_app.project.screens.MovieScreen
 import com.mobile_app.project.ui.theme.MobileAppProjectTheme
 
 
@@ -35,6 +36,7 @@ class MainActivity : ComponentActivity() {
 enum class MovieScreens(@StringRes val title: Int) {
     Home(title = R.string.home),
     SignUp(title = R.string.signup),
+    Detail(title = R.string.movie_detail)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,11 +68,15 @@ fun MovieApp() {
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(route = MovieScreens.Home.name) {
-                    HomeScreen()
+                    HomeScreen(navController)
                 }
 
                 composable(route = MovieScreens.SignUp.name) {
                     SignUp()
+                }
+
+                composable(route = MovieScreens.Detail.name) {
+                    MovieScreen(navController)
                 }
             }
         }
