@@ -2,4 +2,5 @@
     <string name="app_name">FreeMoo</string>
     <string name="home">Home</string>
     <string name="signup">Create an account</string>
+    <string name="movie_detail">View movie detail</string>
 </resources>
