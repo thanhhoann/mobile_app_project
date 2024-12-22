@@ -42,7 +42,7 @@ import com.mobile_app.project.ui.theme.primary_background
 
 @Preview(showBackground = true)
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun  HomeScreen(modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier.fillMaxSize(),
         color = primary_background
