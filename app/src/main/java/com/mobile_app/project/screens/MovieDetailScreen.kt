@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mobile_app.project.R
+import com.mobile_app.project.components.StyledButton
+import com.mobile_app.project.components.ButtonVariants
 
 // Data class for cast members
 data class CastMember(
@@ -220,23 +222,14 @@ fun MovieDetail(castMembers: List<CastMember>, navController: NavController) {
                     }
 
                     // Book Tickets Button
-                    Button(
+                    StyledButton(
+                        color = ButtonVariants.Primary,
                         onClick = { /* Handle booking */ },
+                        text = "Book Tickets",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFFF3B30)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(
-                            text = "Book Tickets",
-                            modifier = Modifier.padding(vertical = 8.dp),
-                            fontSize = 16.sp,
-                            color = Color.White
-                        )
-                    }
+                            .padding(vertical = 16.dp)
+                    )
                 }
             }
         }
