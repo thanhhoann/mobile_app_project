@@ -1,4 +1,4 @@
-package com.mobile_app.project.components
+package com.mobile_app.project.components.movies
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,15 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.mobile_app.project.ui.screens.MovieUiState
 import com.mobile_app.project.ui.screens.MovieViewModel
+import com.mobile_app.project.ui.screens.UpcomingMoviesUiState
 import com.mobile_app.project.ui.theme.Typography
 import com.mobile_app.project.ui.theme.on_background
 import com.mobile_app.project.ui.theme.primary
 
 @Composable
-fun PopularMovies(movieViewModel: MovieViewModel = hiltViewModel()) {
-    val movieUiState by movieViewModel.movieUiState.collectAsState()
+fun UpcomingMovies(movieViewModel: MovieViewModel = hiltViewModel()) {
+    val upcomingMoviesUiState by movieViewModel.upcomingMoviesUiState.collectAsState()
 
     Column(modifier = Modifier.padding(16.dp)) {
         Row(
@@ -33,7 +33,7 @@ fun PopularMovies(movieViewModel: MovieViewModel = hiltViewModel()) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Recommended Movies",
+                text = "Upcoming Movies",
                 color = on_background,
                 style = Typography.headlineMedium
             )
@@ -43,11 +43,12 @@ fun PopularMovies(movieViewModel: MovieViewModel = hiltViewModel()) {
             )
         }
 
-        when (movieUiState) {
-            is MovieUiState.Loading -> Text(text = "Loading", color = Color.White)
-            is MovieUiState.Error -> Text(text = "Error", color = Color.White)
-            is MovieUiState.Success -> {
-                val movies = (movieUiState as MovieUiState.Success).apiResponse.results
+        when (upcomingMoviesUiState) {
+            is UpcomingMoviesUiState.Loading -> Text(text = "Loading", color = Color.White)
+            is UpcomingMoviesUiState.Error -> Text(text = "Error", color = Color.White)
+            is UpcomingMoviesUiState.Success -> {
+                val movies =
+                    (upcomingMoviesUiState as UpcomingMoviesUiState.Success).upcomingMovies.results
                 LazyRow(
                     modifier = Modifier.padding(top = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)

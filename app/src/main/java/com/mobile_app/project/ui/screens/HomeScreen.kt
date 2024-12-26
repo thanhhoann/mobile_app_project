@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -38,7 +39,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mobile_app.project.MovieScreens
 import com.mobile_app.project.R
-import com.mobile_app.project.components.PopularMovies
+import com.mobile_app.project.components.movies.NowPlayingMovies
+import com.mobile_app.project.components.movies.PopularMovies
+import com.mobile_app.project.components.movies.TopRatedMovies
+import com.mobile_app.project.components.movies.UpcomingMovies
 import com.mobile_app.project.ui.theme.Typography
 import com.mobile_app.project.ui.theme.primary_background
 
@@ -60,14 +64,16 @@ fun HomeScreen(
         modifier = modifier.fillMaxSize(),
         color = primary_background
     ) {
-        Column {
-            FeaturedMovie(navController)
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            PopularMovies(movieViewModel)
-
-            Spacer(modifier = Modifier.weight(1f))
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
+        ) {
+            item { FeaturedMovie(navController) }
+            item { PopularMovies(movieViewModel) }
+            item { NowPlayingMovies(movieViewModel) }
+            item { TopRatedMovies(movieViewModel) }
+            item { UpcomingMovies(movieViewModel) }
         }
     }
 }

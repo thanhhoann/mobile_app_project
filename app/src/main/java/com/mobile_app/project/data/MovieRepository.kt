@@ -14,7 +14,10 @@ import javax.inject.Singleton
  * Repository retrieves movie data
  */
 interface MovieRepository {
+    suspend fun getNowPlayingMovies(page: Int): Response<ApiResponse>
     suspend fun getPopularMovies(page: Int): Response<ApiResponse>
+    suspend fun getTopRatedMovies(page: Int): Response<ApiResponse>
+    suspend fun getUpcomingMovies(page: Int): Response<ApiResponse>
 }
 
 /**
@@ -24,8 +27,27 @@ interface MovieRepository {
 class DefaultMovieRepository @Inject constructor(private val movieApiService: MovieApiService) :
     MovieRepository {
     private val tmdbApiKey = "6bbbb9334e0477b060153236eca7ae2e"
+
+    override suspend fun getNowPlayingMovies(page: Int): Response<ApiResponse> =
+        movieApiService.getNowPlayingMovies(
+            apiKey = tmdbApiKey,
+            page = page
+        )
+
     override suspend fun getPopularMovies(page: Int): Response<ApiResponse> =
         movieApiService.getPopularMovies(
+            apiKey = tmdbApiKey,
+            page = page
+        )
+
+    override suspend fun getTopRatedMovies(page: Int): Response<ApiResponse> =
+        movieApiService.getTopRatedMovies(
+            apiKey = tmdbApiKey,
+            page = page
+        )
+
+    override suspend fun getUpcomingMovies(page: Int): Response<ApiResponse> =
+        movieApiService.getUpcomingMovies(
             apiKey = tmdbApiKey,
             page = page
         )

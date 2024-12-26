@@ -1,4 +1,4 @@
-package com.mobile_app.project.components
+package com.mobile_app.project.components.movies
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
