@@ -18,7 +18,7 @@ import javax.inject.Inject
  * UI state for the Home screen
  */
 sealed interface MovieUiState {
-    data class Success(val results: ApiResponse) : MovieUiState
+    data class Success(val apiResponse: ApiResponse) : MovieUiState
     data object Error : MovieUiState
     data object Loading : MovieUiState
 }

@@ -53,7 +53,6 @@ fun MovieApp() {
 
 
     MobileAppProjectTheme {
-        val movieViewModel: MovieViewModel = viewModel(factory = MovieViewModel.Factory)
         Scaffold(
             modifier = Modifier
                 .fillMaxSize()
@@ -73,7 +72,7 @@ fun MovieApp() {
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(route = MovieScreens.Home.name) {
-                    HomeScreen(movieViewModel, navController)
+                    HomeScreen(navController)
                 }
 
                 composable(route = MovieScreens.SignUp.name) {
