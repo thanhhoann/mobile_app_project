@@ -1,9 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-
     // Add the Google services Gradle plugin
     id 'com.google.gms.google-services'
+
+    id 'com.google.dagger.hilt.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -38,6 +40,7 @@ android {
     }
     buildFeatures {
         compose true
+        buildConfig true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
@@ -85,7 +88,27 @@ dependencies {
     // Splash screen
     implementation("androidx.core:core-splashscreen:1.0.1")
 
+    // Retrofit
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    // Retrofit with Scalar Converter
+    implementation("com.squareup.retrofit2:converter-scalars:2.11.0")
+    // Retrofit with Gson Converter
+    implementation('com.squareup.retrofit2:converter-gson:2.3.0')
 
-    // Retrofit (for Networking)
-    implementation 'com.squareup.retrofit2:retrofit:2.11.0'
+    // OkHttp
+    implementation("com.squareup.okhttp3:okhttp")
+
+    // TMDB API library implemented with Kotlin
+    implementation("app.moviebase:tmdb-api:1.4.0")
+
+    // Hilt
+    implementation('com.google.dagger:hilt-android:2.54')
+    annotationProcessor('com.google.dagger:hilt-compiler:2.54')
+    kapt('com.google.dagger:hilt-compiler:2.54')
+
+    // Hilt integration with Compose
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 }

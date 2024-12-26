@@ -1,4 +1,4 @@
-package com.mobile_app.project.screens
+package com.mobile_app.project.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,6 +26,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mobile_app.project.MovieScreens
@@ -48,11 +51,17 @@ import com.mobile_app.project.ui.theme.primary_background
 @Composable
 fun HomeScreenPreview() {
     val navController = rememberNavController() // Mock NavController for preview
-    HomeScreen(navController = navController)
+
+//    HomeScreen(navController = navController)
 }
 
 @Composable
-fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun HomeScreen(
+    movieViewModel: MovieViewModel = hiltViewModel(),
+    navController: NavController,
+    contentPadding: Any? = null,
+    modifier: Modifier = Modifier,
+) {
     Surface(
         modifier = modifier.fillMaxSize(),
         color = primary_background
@@ -60,7 +69,21 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
         Column {
             FeaturedMovie(navController)
             Spacer(modifier = Modifier.height(32.dp))
-            RecommendedMovies()
+
+            //  RecommendedMovies()
+
+            val movieUiState by movieViewModel.movieUiState.collectAsState()
+
+            when (movieUiState) {
+                is MovieUiState.Loading -> Text(text = "Loading", color = Color.White)
+                is MovieUiState.Error -> Text(text = "Error", color = Color.White)
+                is MovieUiState.Success -> Box() {
+                    Text(
+                        text = (movieUiState as MovieUiState.Success).results.toString(), color = Color.White, modifier = Modifier
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.weight(1f))
         }
     }

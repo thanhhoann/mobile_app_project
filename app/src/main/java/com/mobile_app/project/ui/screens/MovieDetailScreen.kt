@@ -1,4 +1,4 @@
-package com.mobile_app.project.screens
+package com.mobile_app.project.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
