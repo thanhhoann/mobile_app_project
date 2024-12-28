@@ -13,13 +13,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mobile_app.project.components.MovieAppBar
-import com.mobile_app.project.screens.HomeScreen
-import com.mobile_app.project.screens.SignUp
+import com.mobile_app.project.ui.screens.HomeScreen
+import com.mobile_app.project.ui.screens.MovieScreen
+import com.mobile_app.project.ui.screens.MovieViewModel
+import com.mobile_app.project.ui.screens.SignUp
 import com.mobile_app.project.ui.theme.MobileAppProjectTheme
 
 
@@ -35,6 +38,7 @@ class MainActivity : ComponentActivity() {
 enum class MovieScreens(@StringRes val title: Int) {
     Home(title = R.string.home),
     SignUp(title = R.string.signup),
+    Detail(title = R.string.movie_detail)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,6 +50,8 @@ fun MovieApp() {
     val currentScreen = MovieScreens.valueOf(
         backStackEntry?.destination?.route ?: MovieScreens.Home.name
     )
+
+
     MobileAppProjectTheme {
         Scaffold(
             modifier = Modifier
@@ -66,11 +72,15 @@ fun MovieApp() {
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(route = MovieScreens.Home.name) {
-                    HomeScreen()
+                    HomeScreen(navController)
                 }
 
                 composable(route = MovieScreens.SignUp.name) {
                     SignUp()
+                }
+
+                composable(route = MovieScreens.Detail.name) {
+                    MovieScreen(navController)
                 }
             }
         }

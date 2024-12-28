@@ -1,4 +1,4 @@
-package com.mobile_app.project.screens
+package com.mobile_app.project.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,14 +14,14 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,30 +34,52 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.mobile_app.project.MovieScreens
 import com.mobile_app.project.R
+import com.mobile_app.project.components.movies.NowPlayingMovies
+import com.mobile_app.project.components.movies.PopularMovies
+import com.mobile_app.project.components.movies.TopRatedMovies
+import com.mobile_app.project.components.movies.UpcomingMovies
 import com.mobile_app.project.ui.theme.Typography
-import com.mobile_app.project.ui.theme.on_background
-import com.mobile_app.project.ui.theme.primary
 import com.mobile_app.project.ui.theme.primary_background
 
 @Preview(showBackground = true)
 @Composable
-fun  HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreenPreview() {
+    val navController = rememberNavController() // Mock NavController for preview
+    HomeScreen(navController = navController)
+}
+
+@Composable
+fun HomeScreen(
+    navController: NavController,
+    contentPadding: Any? = null,
+    modifier: Modifier = Modifier,
+) {
+    val movieViewModel: MovieViewModel = viewModel(factory = MovieViewModel.Factory)
     Surface(
         modifier = modifier.fillMaxSize(),
         color = primary_background
     ) {
-        Column {
-            FeaturedMovie()
-            Spacer(modifier = Modifier.height(32.dp))
-            RecommendedMovies()
-            Spacer(modifier = Modifier.weight(1f))
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
+        ) {
+            item { FeaturedMovie(navController) }
+            item { PopularMovies(movieViewModel) }
+            item { NowPlayingMovies(movieViewModel) }
+            item { TopRatedMovies(movieViewModel) }
+            item { UpcomingMovies(movieViewModel) }
         }
     }
 }
 
 @Composable
-fun FeaturedMovie() {
+fun FeaturedMovie(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -72,7 +94,8 @@ fun FeaturedMovie() {
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .offset(y = 48.dp)
-                .zIndex(1f)
+                .zIndex(1f),
+            navController = navController
         )
 
         // "Watch Trailer" Button (Positioned at the top-right of the image)
@@ -101,10 +124,10 @@ fun ImageBox() {
 }
 
 @Composable
-fun BottomOverlayBox(modifier: Modifier = Modifier) {
+fun BottomOverlayBox(modifier: Modifier = Modifier, navController: NavController) {
     Box(
         modifier = modifier
-            .fillMaxWidth(0.85f) // Keeps the overlay smaller than the image for a cleaner effect
+            .fillMaxWidth(0.85f)
             .height(120.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(Color.DarkGray)
@@ -158,8 +181,9 @@ fun BottomOverlayBox(modifier: Modifier = Modifier) {
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
+                //Go to movie detail screen
                 Button(
-                    onClick = { /* navigate to movie detail */ },
+                    onClick = { navController.navigate(MovieScreens.Detail.name) },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                     modifier = Modifier
                         .height(36.dp)
@@ -186,91 +210,31 @@ fun BottomOverlayBox(modifier: Modifier = Modifier) {
 @Composable
 fun WatchTrailerButton(modifier: Modifier = Modifier) {
     Button(
-        onClick = { /* add later */ },
+        onClick = { /* Add trailer playback */ },
         colors = ButtonDefaults.buttonColors(containerColor = Color.Black.copy(alpha = 0.6f)),
         modifier = modifier
             .padding(8.dp)
             .clip(RoundedCornerShape(16.dp))
     ) {
-        Text(
-            text = "Watch Trailer",
-            color = Color.White,
-            style = Typography.bodySmall,
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
-        Icon(
-            imageVector = Icons.Default.PlayArrow,
-            contentDescription = "Play",
-            tint = Color.White,
-            modifier = Modifier.size(16.dp)
-        )
-    }
-}
-
-@Composable
-fun RecommendedMovies() {
-    val movies = listOf("salaar", "flash", "aquaman")
-
-    Column(modifier = Modifier.padding(16.dp)) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = "Recommended Movies",
-                color = on_background,
-                style = Typography.headlineMedium
+                text = "Watch Trailer",
+                color = Color.White,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(horizontal = 8.dp)
             )
-            Text(
-                text = "See All >",
-                color = primary,
-                style = Typography.bodySmall
+            Icon(
+                imageVector = Icons.Default.PlayArrow,
+                contentDescription = "Play",
+                tint = Color.White,
+                modifier = Modifier.size(16.dp)
             )
-        }
-
-        LazyRow(
-            modifier = Modifier.padding(top = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(movies) { movie ->
-                MoviePoster(movie)
-            }
         }
     }
 }
 
-@Composable
-fun MoviePoster(movie: String) {
-    Box(
-        modifier = Modifier
-            .width(120.dp)
-            .height(180.dp)
-            .clip(RoundedCornerShape(8.dp))
-    ) {
-        Image(
-            painter = painterResource(
-                id = when (movie) {
-                    "salaar" -> R.drawable.salaar
-                    "flash" -> R.drawable.flash
-                    "aquaman" -> R.drawable.aquaman
-                    else -> R.xml.placeholder // Placeholder image
-                }
-            ),
-            contentDescription = movie,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
-        Icon(
-            imageVector = Icons.Default.PlayArrow,
-            contentDescription = "Play",
-            tint = Color.White,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .size(24.dp)
-                .background(Color.Black.copy(alpha = 0.6f), shape = RoundedCornerShape(50))
-                .padding(4.dp)
-        )
-    }
-}
+
 
