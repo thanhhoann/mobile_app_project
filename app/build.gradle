@@ -97,14 +97,10 @@ dependencies {
     // Retrofit with Gson Converter
     implementation('com.squareup.retrofit2:converter-gson:2.3.0')
 
-    // TMDB API library implemented with Kotlin
-    implementation("app.moviebase:tmdb-api:1.4.0")
-
     // Hilt
     implementation('com.google.dagger:hilt-android:2.54')
     annotationProcessor('com.google.dagger:hilt-compiler:2.54')
     kapt('com.google.dagger:hilt-compiler:2.54')
-
     // Hilt integration with Compose
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
