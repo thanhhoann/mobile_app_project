@@ -13,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -24,6 +25,7 @@ import com.mobile_app.project.ui.screens.MovieScreen
 import com.mobile_app.project.ui.screens.MovieViewModel
 import com.mobile_app.project.ui.screens.SignUp
 import com.mobile_app.project.ui.theme.MobileAppProjectTheme
+import dagger.hilt.android.AndroidEntryPoint
 
 
 class MainActivity : ComponentActivity() {
@@ -36,9 +38,7 @@ class MainActivity : ComponentActivity() {
 }
 
 enum class MovieScreens(@StringRes val title: Int) {
-    Home(title = R.string.home),
-    SignUp(title = R.string.signup),
-    Detail(title = R.string.movie_detail)
+    Home(title = R.string.home), SignUp(title = R.string.signup), Detail(title = R.string.movie_detail)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,33 +46,33 @@ enum class MovieScreens(@StringRes val title: Int) {
 fun MovieApp() {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
+//    val viewModel: MovieViewModel = hiltViewModel()
 
     val currentScreen = MovieScreens.valueOf(
         backStackEntry?.destination?.route ?: MovieScreens.Home.name
     )
 
+    val viewModel: MovieViewModel = viewModel(factory = MovieViewModel.Factory)
 
     MobileAppProjectTheme {
-        Scaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+        Scaffold(modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
             topBar = {
-                MovieAppBar(
-                    navController = navController,
+                MovieAppBar(navController = navController,
                     currentScreenTitle = currentScreen.title,
                     canNavigateBack = navController.previousBackStackEntry != null,
-                    navigateUp = { navController.popBackStack() }
-                )
-            }
-        ) { innerPadding ->
+                    navigateUp = { navController.popBackStack() })
+            }) { innerPadding ->
+
             NavHost(
                 navController = navController,
                 startDestination = MovieScreens.Home.name,
                 modifier = Modifier.padding(innerPadding)
             ) {
+
                 composable(route = MovieScreens.Home.name) {
-                    HomeScreen(navController)
+                    HomeScreen(viewModel, navController)
                 }
 
                 composable(route = MovieScreens.SignUp.name) {
@@ -80,7 +80,7 @@ fun MovieApp() {
                 }
 
                 composable(route = MovieScreens.Detail.name) {
-                    MovieScreen(navController)
+                    MovieScreen(viewModel, navController)
                 }
             }
         }

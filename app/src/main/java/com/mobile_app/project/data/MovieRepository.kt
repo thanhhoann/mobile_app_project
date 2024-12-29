@@ -1,6 +1,7 @@
 package com.mobile_app.project.data
 
-import com.mobile_app.project.model.ApiResponse
+import com.mobile_app.project.model.MovieDetailsResponse
+import com.mobile_app.project.model.MovieListsApiResponse
 import com.mobile_app.project.network.MovieApiService
 import dagger.Module
 import dagger.Provides
@@ -14,10 +15,11 @@ import javax.inject.Singleton
  * Repository retrieves movie data
  */
 interface MovieRepository {
-    suspend fun getNowPlayingMovies(page: Int): Response<ApiResponse>
-    suspend fun getPopularMovies(page: Int): Response<ApiResponse>
-    suspend fun getTopRatedMovies(page: Int): Response<ApiResponse>
-    suspend fun getUpcomingMovies(page: Int): Response<ApiResponse>
+    suspend fun getNowPlayingMovies(page: Int): Response<MovieListsApiResponse>
+    suspend fun getPopularMovies(page: Int): Response<MovieListsApiResponse>
+    suspend fun getTopRatedMovies(page: Int): Response<MovieListsApiResponse>
+    suspend fun getUpcomingMovies(page: Int): Response<MovieListsApiResponse>
+    suspend fun getMovieDetails(movieId: Int): Response<MovieDetailsResponse>
 }
 
 /**
@@ -28,28 +30,34 @@ class DefaultMovieRepository @Inject constructor(private val movieApiService: Mo
     MovieRepository {
     private val tmdbApiKey = "6bbbb9334e0477b060153236eca7ae2e"
 
-    override suspend fun getNowPlayingMovies(page: Int): Response<ApiResponse> =
+    override suspend fun getNowPlayingMovies(page: Int): Response<MovieListsApiResponse> =
         movieApiService.getNowPlayingMovies(
             apiKey = tmdbApiKey,
             page = page
         )
 
-    override suspend fun getPopularMovies(page: Int): Response<ApiResponse> =
+    override suspend fun getPopularMovies(page: Int): Response<MovieListsApiResponse> =
         movieApiService.getPopularMovies(
             apiKey = tmdbApiKey,
             page = page
         )
 
-    override suspend fun getTopRatedMovies(page: Int): Response<ApiResponse> =
+    override suspend fun getTopRatedMovies(page: Int): Response<MovieListsApiResponse> =
         movieApiService.getTopRatedMovies(
             apiKey = tmdbApiKey,
             page = page
         )
 
-    override suspend fun getUpcomingMovies(page: Int): Response<ApiResponse> =
+    override suspend fun getUpcomingMovies(page: Int): Response<MovieListsApiResponse> =
         movieApiService.getUpcomingMovies(
             apiKey = tmdbApiKey,
             page = page
+        )
+
+    override suspend fun getMovieDetails(movieId: Int): Response<MovieDetailsResponse> =
+        movieApiService.getMovieDetails(
+            movieId = movieId,
+            apiKey = tmdbApiKey,
         )
 }
 

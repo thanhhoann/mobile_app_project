@@ -2,15 +2,35 @@ package com.mobile_app.project.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,14 +45,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mobile_app.project.R
-import com.mobile_app.project.components.StyledButton
 import com.mobile_app.project.components.ButtonVariants
+import com.mobile_app.project.components.StyledButton
+import com.mobile_app.project.model.MovieDetailsUiState
 
 // Data class for cast members
 data class CastMember(
-    val id: Int,
-    val name: String,
-    val imageResId: Int
+    val id: Int, val name: String, val imageResId: Int
 )
 
 // Preview for MovieScreen
@@ -40,11 +59,11 @@ data class CastMember(
 @Composable
 fun MovieScreenPreview() {
     val navController = rememberNavController() // Mock NavController for preview
-    MovieScreen(navController = navController)
+//    MovieScreen(navController = navController)
 }
 
 @Composable
-fun MovieScreen(navController: NavController) {
+fun MovieScreen(viewModel: MovieViewModel, navController: NavController) {
     // Sample cast members - change later when database connect
     val castMembers = remember {
         listOf(
@@ -56,11 +75,21 @@ fun MovieScreen(navController: NavController) {
         )
     }
 
-    MovieDetail(castMembers, navController)
+    MovieDetail(viewModel, castMembers, navController)
 }
 
 @Composable
-fun MovieDetail(castMembers: List<CastMember>, navController: NavController) {
+fun MovieDetail(
+    viewModel: MovieViewModel, castMembers: List<CastMember>, navController: NavController
+) {
+    val selectedMovieIdUiState by viewModel.selectedMovieIdUiState.collectAsState()
+    val selectedMovieId = selectedMovieIdUiState.id
+    val movieDetailsUiState = viewModel.movieDetailsUiState.collectAsState()
+
+    LaunchedEffect(selectedMovieId) {
+        viewModel.getMovieDetailsFromViewModel(selectedMovieId)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -134,13 +163,24 @@ fun MovieDetail(castMembers: List<CastMember>, navController: NavController) {
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 12.dp)
                 ) {
-                    // Movie Title and Genre
-                    Text(
-                        text = "EVIL DEAD RISE",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
+                    when (val state = movieDetailsUiState.value) {
+                        is MovieDetailsUiState.Loading -> {
+                            Text("Loading movie title...")
+                        }
+
+                        is MovieDetailsUiState.Success -> {
+                            Text(
+                                text = state.movieDetails.title,
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
+
+                        is MovieDetailsUiState.Error -> {
+                            Text("Error fetching movie title.")
+                        }
+                    }
 
                     Row(
                         modifier = Modifier
@@ -150,9 +190,7 @@ fun MovieDetail(castMembers: List<CastMember>, navController: NavController) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "HORROR 2D.3D.4DX",
-                            fontSize = 14.sp,
-                            color = Color.Gray
+                            text = "HORROR 2D.3D.4DX", fontSize = 14.sp, color = Color.Gray
                         )
 
                         Button(
@@ -240,15 +278,10 @@ fun MovieDetail(castMembers: List<CastMember>, navController: NavController) {
 private fun MovieInfoItem(title: String, value: String) {
     Column {
         Text(
-            text = title,
-            color = Color.Gray,
-            fontSize = 12.sp
+            text = title, color = Color.Gray, fontSize = 12.sp
         )
         Text(
-            text = value,
-            color = Color.White,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            text = value, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold
         )
     }
 }
@@ -256,8 +289,7 @@ private fun MovieInfoItem(title: String, value: String) {
 @Composable
 private fun CastMemberItem(castMember: CastMember) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.width(70.dp)
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.width(70.dp)
     ) {
         Image(
             painter = painterResource(id = castMember.imageResId),
