@@ -106,7 +106,8 @@ fun SignUp() {
                 value = signUpStates.value.confirmPassword ?: "",
                 onValueChange = { signUpViewModel.updateConfirmPassword(it) },
                 keyboardType = if (showConfirmPassword) KeyboardType.Text else KeyboardType.Password,
-                visualTransformation = if (showConfirmPassword) VisualTransformation.None else PasswordVisualTransformation(),                label = "Confirm Password",
+                visualTransformation = if (showConfirmPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                label = "Confirm Password",
                 trailingIcon = {
                     IconButton(
                         onClick = { showConfirmPassword = !showConfirmPassword }
@@ -136,7 +137,15 @@ fun SignUp() {
             }
             StyledButton(
                 color = ButtonVariants.Primary,
-                onClick = { signUpViewModel.validateSignUpFields() },
+                onClick = {
+                    signUpViewModel.validateSignUpFields()
+                    if (errors.isEmpty()) {
+                        signUpViewModel.onSignUp(
+                            signUpStates.value.email,
+                            signUpStates.value.password ?: ""
+                        )
+                    }
+                },
                 text = "Sign up",
                 modifier = Modifier.fillMaxWidth()
             )

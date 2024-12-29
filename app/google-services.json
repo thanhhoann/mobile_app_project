@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "327260001937",
-    "project_id": "iu-mobile-app-project",
-    "storage_bucket": "iu-mobile-app-project.appspot.com"
+    "project_number": "670922815041",
+    "project_id": "freemoo-fa15d",
+    "storage_bucket": "freemoo-fa15d.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:327260001937:android:6c8a6775fa000aa30e1130",
+        "mobilesdk_app_id": "1:670922815041:android:d5a74651fcc5e2d505f8c0",
         "android_client_info": {
           "package_name": "com.mobile_app.project"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "670922815041-tdqme013fbda0ljj2oth5skluc55i5ct.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mobile_app.project",
+            "certificate_hash": "58d6fec1e18a55ca641b10a5af50c9d6071085fe"
+          }
+        },
+        {
+          "client_id": "670922815041-u984lg9n49dvl9nfvajq2d4k3f9faea8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCnXL_M3n-Fj3FTNFz9cEFCSC_Q5b_y3xI"
+          "current_key": "AIzaSyB-PwqQuMhseS1ts8tGF0C-yHLe_xoPiNo"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "670922815041-u984lg9n49dvl9nfvajq2d4k3f9faea8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
