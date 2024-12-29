@@ -1,15 +1,15 @@
 package com.mobile_app.project.view_model
 
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
+import com.mobile_app.project.config.auth.AuthService
 import com.mobile_app.project.states.UserUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class SignUpViewModel : ViewModel() {
-    private lateinit var auth: FirebaseAuth
     val errorMessages = mutableStateOf<List<String>>(emptyList())
 
     private val _signUpStates = MutableStateFlow(UserUiState("", "", ""))
@@ -47,19 +47,7 @@ class SignUpViewModel : ViewModel() {
         this.errorMessages.value = errorMessages
     }
 
-    fun onSignUp(email: String, password: String) {
-        auth = FirebaseAuth.getInstance()
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    val user = auth.currentUser
-                    Log.d("SignUpViewModel", "createUserWithEmail:success")
-                } else {
-                    // If sign in fails, display a message to the user.
-                    errorMessages.value = listOf("Authentication failed.")
-                    Log.w("SignUpViewModel", "createUserWithEmail:failure", task.exception)
-                }
-            }
+    fun onSignUp(authService: AuthService, email: String, password: String): Task<AuthResult> {
+        return authService.signUp(email, password)
     }
 }

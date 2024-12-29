@@ -1,7 +1,6 @@
 package com.mobile_app.project
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
@@ -18,8 +17,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.auth.FirebaseAuth
 import com.mobile_app.project.components.MovieAppBar
+import com.mobile_app.project.config.auth.AuthService
 import com.mobile_app.project.ui.screens.HomeScreen
 import com.mobile_app.project.ui.screens.MovieScreen
 import com.mobile_app.project.ui.screens.SignUp
@@ -44,6 +43,7 @@ enum class MovieScreens(@StringRes val title: Int) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieApp() {
+    val authService = AuthService()
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
 
@@ -51,7 +51,7 @@ fun MovieApp() {
         backStackEntry?.destination?.route ?: MovieScreens.Home.name
     )
 
-
+    authService.init()
     MobileAppProjectTheme {
         Scaffold(
             modifier = Modifier
@@ -76,7 +76,7 @@ fun MovieApp() {
                 }
 
                 composable(route = MovieScreens.SignUp.name) {
-                    SignUp()
+                    SignUp(authService = authService)
                 }
 
                 composable(route = MovieScreens.Detail.name) {

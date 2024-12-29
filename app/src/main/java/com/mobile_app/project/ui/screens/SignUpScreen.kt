@@ -1,5 +1,6 @@
 package com.mobile_app.project.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,18 +19,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mobile_app.project.R
 import com.mobile_app.project.components.ButtonVariants
 import com.mobile_app.project.components.StyledButton
 import com.mobile_app.project.components.StyledTextField
+import com.mobile_app.project.config.auth.AuthService
 import com.mobile_app.project.view_model.SignUpViewModel
 
 
@@ -54,9 +56,9 @@ fun GoogleButton(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun SignUp() {
+fun SignUp(authService: AuthService) {
+    val context = LocalContext.current
     val signUpViewModel: SignUpViewModel = viewModel()
     val signUpStates = signUpViewModel.signUpStates.collectAsState()
     val errors = signUpViewModel.errorMessages.value
@@ -141,9 +143,24 @@ fun SignUp() {
                     signUpViewModel.validateSignUpFields()
                     if (errors.isEmpty()) {
                         signUpViewModel.onSignUp(
+                            authService,
                             signUpStates.value.email,
                             signUpStates.value.password ?: ""
-                        )
+                        ).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Toast.makeText(
+                                    context,
+                                    "Sign up successful",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Sign up failed",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
                     }
                 },
                 text = "Sign up",

@@ -46,7 +46,10 @@ fun StyledTextField(
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         isError = isError,
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = keyboardType,
+            autoCorrectEnabled = false,
+        ),
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         singleLine = true,
