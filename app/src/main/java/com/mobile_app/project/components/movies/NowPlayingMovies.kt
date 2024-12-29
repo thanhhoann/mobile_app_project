@@ -84,7 +84,6 @@ fun NowPlayingMovies(
                                 },
                         ) {
                             val imageUrl = "https://image.tmdb.org/t/p/w500${movie.posterPath}"
-
                             AsyncImage(
                                 model = ImageRequest.Builder(
                                     context = LocalContext.current
