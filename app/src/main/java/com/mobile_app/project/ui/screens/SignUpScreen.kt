@@ -21,16 +21,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.mobile_app.project.MovieScreens
 import com.mobile_app.project.R
+import com.mobile_app.project.components.AnnotatedText
 import com.mobile_app.project.components.ButtonVariants
 import com.mobile_app.project.components.StyledButton
 import com.mobile_app.project.components.StyledTextField
+import com.mobile_app.project.components.TextAnnotation
 import com.mobile_app.project.config.auth.AuthService
 import com.mobile_app.project.view_model.SignUpViewModel
 
@@ -57,7 +63,7 @@ fun GoogleButton(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SignUp(authService: AuthService) {
+fun SignUp(authService: AuthService, navController: NavController) {
     val context = LocalContext.current
     val signUpViewModel: SignUpViewModel = viewModel()
     val signUpStates = signUpViewModel.signUpStates.collectAsState()
@@ -153,6 +159,7 @@ fun SignUp(authService: AuthService) {
                                     "Sign up successful",
                                     Toast.LENGTH_LONG
                                 ).show()
+                                navController.navigate(MovieScreens.SignIn.name)
                             } else {
                                 Toast.makeText(
                                     context,
@@ -176,9 +183,35 @@ fun SignUp(authService: AuthService) {
             GoogleButton(
                 modifier = Modifier.fillMaxWidth()
             )
-
-            Text(
-                text = "Already have an account? Login", style = MaterialTheme.typography.bodySmall
+            AnnotatedText(
+                text = "Already have an account? Sign in",
+                textStyle = MaterialTheme.typography.bodySmall,
+                annotations = listOf(
+                    TextAnnotation(
+                        start = 0,
+                        end = 24,
+                        style = SpanStyle(
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                            fontFamily = MaterialTheme.typography.bodySmall.fontFamily,
+                            fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                            color = MaterialTheme.colorScheme.onTertiary,
+                        ),
+                    ),
+                    TextAnnotation(
+                        start = 25,
+                        end = 32,
+                        style = SpanStyle(
+                            textDecoration = TextDecoration.Underline,
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                            fontFamily = MaterialTheme.typography.bodySmall.fontFamily,
+                            fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                            color = MaterialTheme.colorScheme.tertiary,
+                        ),
+                        onClick = {
+                            navController.navigate(MovieScreens.SignIn.name)
+                        }
+                    )
+                ),
             )
         }
     }

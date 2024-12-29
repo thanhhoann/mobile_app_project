@@ -21,6 +21,7 @@ import com.mobile_app.project.components.MovieAppBar
 import com.mobile_app.project.config.auth.AuthService
 import com.mobile_app.project.ui.screens.HomeScreen
 import com.mobile_app.project.ui.screens.MovieScreen
+import com.mobile_app.project.ui.screens.SignInScreen
 import com.mobile_app.project.ui.screens.SignUp
 import com.mobile_app.project.ui.theme.MobileAppProjectTheme
 
@@ -37,6 +38,7 @@ class MainActivity : ComponentActivity() {
 enum class MovieScreens(@StringRes val title: Int) {
     Home(title = R.string.home),
     SignUp(title = R.string.signup),
+    SignIn(title = R.string.signin),
     Detail(title = R.string.movie_detail)
 }
 
@@ -76,11 +78,15 @@ fun MovieApp() {
                 }
 
                 composable(route = MovieScreens.SignUp.name) {
-                    SignUp(authService = authService)
+                    SignUp(authService = authService, navController)
                 }
 
                 composable(route = MovieScreens.Detail.name) {
                     MovieScreen(navController)
+                }
+
+                composable(route = MovieScreens.SignIn.name) {
+                    SignInScreen(navController)
                 }
             }
         }
