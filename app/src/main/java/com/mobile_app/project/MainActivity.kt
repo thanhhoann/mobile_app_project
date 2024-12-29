@@ -13,15 +13,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mobile_app.project.components.MovieAppBar
+import com.mobile_app.project.config.auth.AuthService
 import com.mobile_app.project.ui.screens.HomeScreen
 import com.mobile_app.project.ui.screens.MovieScreen
-import com.mobile_app.project.ui.screens.MovieViewModel
+import com.mobile_app.project.ui.screens.SignInScreen
 import com.mobile_app.project.ui.screens.SignUp
 import com.mobile_app.project.ui.theme.MobileAppProjectTheme
 
@@ -38,12 +38,14 @@ class MainActivity : ComponentActivity() {
 enum class MovieScreens(@StringRes val title: Int) {
     Home(title = R.string.home),
     SignUp(title = R.string.signup),
+    SignIn(title = R.string.signin),
     Detail(title = R.string.movie_detail)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieApp() {
+    val authService = AuthService()
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
 
@@ -51,7 +53,7 @@ fun MovieApp() {
         backStackEntry?.destination?.route ?: MovieScreens.Home.name
     )
 
-
+    authService.init()
     MobileAppProjectTheme {
         Scaffold(
             modifier = Modifier
@@ -76,11 +78,15 @@ fun MovieApp() {
                 }
 
                 composable(route = MovieScreens.SignUp.name) {
-                    SignUp()
+                    SignUp(authService = authService, navController)
                 }
 
                 composable(route = MovieScreens.Detail.name) {
                     MovieScreen(navController)
+                }
+
+                composable(route = MovieScreens.SignIn.name) {
+                    SignInScreen(navController)
                 }
             }
         }

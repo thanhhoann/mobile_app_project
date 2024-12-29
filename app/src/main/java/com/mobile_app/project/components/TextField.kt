@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,6 +26,7 @@ fun StyledTextField(
     isError: Boolean = false,
     errorMessage: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
@@ -44,11 +46,15 @@ fun StyledTextField(
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         isError = isError,
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = keyboardType,
+            autoCorrectEnabled = false,
+        ),
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         singleLine = true,
-        colors = customTextFieldColors
+        colors = customTextFieldColors,
+        visualTransformation = visualTransformation
     )
 
     if (isError && errorMessage.isNotEmpty()) {
