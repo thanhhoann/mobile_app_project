@@ -13,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -21,6 +22,7 @@ import com.mobile_app.project.components.MovieAppBar
 import com.mobile_app.project.config.auth.AuthService
 import com.mobile_app.project.ui.screens.HomeScreen
 import com.mobile_app.project.ui.screens.MovieScreen
+import com.mobile_app.project.ui.screens.MovieViewModel
 import com.mobile_app.project.ui.screens.SignInScreen
 import com.mobile_app.project.ui.screens.SignUp
 import com.mobile_app.project.ui.theme.MobileAppProjectTheme
@@ -53,6 +55,8 @@ fun MovieApp() {
         backStackEntry?.destination?.route ?: MovieScreens.Home.name
     )
 
+    val viewModel: MovieViewModel = viewModel(factory = MovieViewModel.Factory)
+
     authService.init()
     MobileAppProjectTheme {
         Scaffold(
@@ -74,7 +78,7 @@ fun MovieApp() {
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(route = MovieScreens.Home.name) {
-                    HomeScreen(navController)
+                    HomeScreen(viewModel, navController)
                 }
 
                 composable(route = MovieScreens.SignUp.name) {
@@ -82,7 +86,7 @@ fun MovieApp() {
                 }
 
                 composable(route = MovieScreens.Detail.name) {
-                    MovieScreen(navController)
+                    MovieScreen(viewModel, navController)
                 }
 
                 composable(route = MovieScreens.SignIn.name) {

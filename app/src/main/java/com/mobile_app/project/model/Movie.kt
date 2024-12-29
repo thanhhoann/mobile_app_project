@@ -3,9 +3,9 @@ package com.mobile_app.project.model
 import com.google.gson.annotations.SerializedName
 
 /**
- * Data class for TMDB API response
+ * Data class for Movie Lists API response
  */
-data class ApiResponse(
+data class MovieListsApiResponse(
     @SerializedName("results") val results: List<Movie>
 )
 
