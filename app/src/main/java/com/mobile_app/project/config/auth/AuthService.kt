@@ -16,10 +16,8 @@ class AuthService {
     val isLoggedIn: Boolean
         get() = currentUser != null
 
-    val currentUserId: String?
-        get() = currentUser?.uid
-
     fun getCurrentUser(): FirebaseUser? {
+        currentUser = firebaseAuth.currentUser
         return currentUser
     }
 

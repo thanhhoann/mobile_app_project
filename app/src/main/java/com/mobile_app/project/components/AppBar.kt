@@ -22,18 +22,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mobile_app.project.MovieScreens
+import com.mobile_app.project.config.auth.AuthService
 import com.mobile_app.project.ui.theme.on_background
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieAppBar(
+    authService: AuthService,
     @StringRes currentScreenTitle: Int,
     navController: NavController,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val username = authService.getCurrentUser()?.email?.substringBefore("@")
     CenterAlignedTopAppBar(
         title = {
             Row(
@@ -42,10 +45,17 @@ fun MovieAppBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    textAlign = TextAlign.Center,
-                    text = stringResource(currentScreenTitle),
-                )
+                if (authService.isLoggedIn && !canNavigateBack) {
+                    Text(
+                        textAlign = TextAlign.Left,
+                        text = "Welcome, $username",
+                    )
+                } else {
+                    Text(
+                        textAlign = TextAlign.Left,
+                        text = stringResource(id = currentScreenTitle),
+                    )
+                }
             }
         },
         actions = {
@@ -62,7 +72,12 @@ fun MovieAppBar(
                     )
                     IconButton(
                         onClick = {
-                            navController.navigate(MovieScreens.SignUp.name)
+                            if (authService.isLoggedIn) {
+                                authService.signOut()
+                                navController.navigate(MovieScreens.SignIn.name)
+                            } else {
+                                navController.navigate(MovieScreens.SignIn.name)
+                            }
                         }
                     ) {
                         Icon(

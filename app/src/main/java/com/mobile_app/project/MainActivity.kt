@@ -1,6 +1,7 @@
 package com.mobile_app.project
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
@@ -13,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -28,12 +30,34 @@ import com.mobile_app.project.ui.theme.MobileAppProjectTheme
 
 
 class MainActivity : ComponentActivity() {
+    val authService = AuthService()
+
+    companion object {
+        const val TAG = "MainActivity"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MovieApp()
+            MovieApp(authService)
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onPause")
+    }
+
 }
 
 enum class MovieScreens(@StringRes val title: Int) {
@@ -45,8 +69,7 @@ enum class MovieScreens(@StringRes val title: Int) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieApp() {
-    val authService = AuthService()
+fun MovieApp(authService: AuthService) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
 
@@ -63,6 +86,7 @@ fun MovieApp() {
                 .background(MaterialTheme.colorScheme.background),
             topBar = {
                 MovieAppBar(
+                    authService = authService,
                     navController = navController,
                     currentScreenTitle = currentScreen.title,
                     canNavigateBack = navController.previousBackStackEntry != null,
@@ -88,11 +112,15 @@ fun MovieApp() {
                 }
 
                 composable(route = MovieScreens.SignIn.name) {
-                    SignInScreen(navController)
-                }
-
-                composable(route = MovieScreens.SignIn.name) {
-                    SignInScreen(navController)
+                    SignInScreen(
+                        authService,
+                        onSignInSuccess = {
+                            navController.navigate(MovieScreens.Home.name) {
+                                popUpTo(MovieScreens.Home.name) { inclusive = true }
+                            }
+                        },
+                        navController
+                    )
                 }
             }
         }
