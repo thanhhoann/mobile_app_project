@@ -1,5 +1,6 @@
 package com.mobile_app.project.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,10 +35,16 @@ import com.mobile_app.project.components.ButtonVariants
 import com.mobile_app.project.components.StyledButton
 import com.mobile_app.project.components.StyledTextField
 import com.mobile_app.project.components.TextAnnotation
+import com.mobile_app.project.config.auth.AuthService
 import com.mobile_app.project.view_model.SignInViewModel
 
 @Composable
-fun SignInScreen(navController: NavController) {
+fun SignInScreen(
+    authService: AuthService,
+    onSignInSuccess: () -> Unit,
+    navController: NavController
+) {
+    val context = LocalContext.current
     val signInViewModel: SignInViewModel = viewModel()
     val signInStates = signInViewModel.signInStates.collectAsState()
     var showPassword by remember { mutableStateOf(false) }
@@ -85,6 +93,27 @@ fun SignInScreen(navController: NavController) {
                 color = ButtonVariants.Primary,
                 onClick = {
                     signInViewModel.validateSignInFields()
+                    if (errors.isEmpty() && signInStates.value.password?.isNotEmpty() == true) {
+                        authService.signIn(
+                            email = signInStates.value.email,
+                            password = signInStates.value.password!!
+                        ).addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                Toast.makeText(
+                                    context,
+                                    "Sign in successful",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            onSignInSuccess()
+                        }.addOnFailureListener {
+                            Toast.makeText(
+                                context,
+                                "Email or password is incorrect",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 },
                 text = "Sign in",
                 modifier = Modifier.fillMaxWidth()
