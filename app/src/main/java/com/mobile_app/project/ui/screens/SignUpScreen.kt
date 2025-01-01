@@ -3,7 +3,6 @@ package com.mobile_app.project.ui.screens
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,7 +24,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -39,28 +37,6 @@ import com.mobile_app.project.components.StyledTextField
 import com.mobile_app.project.components.TextAnnotation
 import com.mobile_app.project.config.auth.AuthService
 import com.mobile_app.project.view_model.SignUpViewModel
-
-
-@Composable
-fun GoogleButton(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        StyledButton(
-            color = ButtonVariants.Secondary,
-            onClick = { /*TODO: Handle Google login */ },
-            text = "Sign up with Google",
-            icon = {
-                Icon(
-                    painter = painterResource(R.drawable.google_icon),
-                    contentDescription = "Google logo"
-                )
-            },
-            modifier = Modifier.fillMaxWidth(),
-        )
-    }
-}
 
 @Composable
 fun SignUp(authService: AuthService, navController: NavController) {
@@ -171,16 +147,6 @@ fun SignUp(authService: AuthService, navController: NavController) {
                     }
                 },
                 text = "Sign up",
-                modifier = Modifier.fillMaxWidth()
-            )
-            Text(
-                text = "Or", style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-
-            GoogleButton(
                 modifier = Modifier.fillMaxWidth()
             )
             AnnotatedText(
