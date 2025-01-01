@@ -160,13 +160,13 @@ fun SignUp(authService: AuthService, navController: NavController) {
                                     Toast.LENGTH_LONG
                                 ).show()
                                 navController.navigate(MovieScreens.SignIn.name)
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Sign up failed",
-                                    Toast.LENGTH_LONG
-                                ).show()
                             }
+                        }.addOnFailureListener {
+                            Toast.makeText(
+                                context,
+                                "Sign up failed: ${it.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
                 },

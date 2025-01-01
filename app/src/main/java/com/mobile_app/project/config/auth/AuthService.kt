@@ -11,7 +11,6 @@ class AuthService {
 
     fun init() {
         firebaseAuth = FirebaseAuth.getInstance()
-        currentUser = firebaseAuth.currentUser
     }
 
     val isLoggedIn: Boolean
@@ -31,5 +30,9 @@ class AuthService {
 
     fun signUp(email: String, password: String): Task<AuthResult> {
         return firebaseAuth.createUserWithEmailAndPassword(email, password)
+    }
+
+    fun signIn(email: String, password: String): Task<AuthResult> {
+        return firebaseAuth.signInWithEmailAndPassword(email, password)
     }
 }
