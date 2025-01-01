@@ -25,25 +25,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.mobile_app.project.MovieScreens
 import com.mobile_app.project.R
 import com.mobile_app.project.components.movies.NowPlayingMovies
 import com.mobile_app.project.components.movies.PopularMovies
 import com.mobile_app.project.components.movies.TopRatedMovies
 import com.mobile_app.project.components.movies.UpcomingMovies
+import com.mobile_app.project.model.NowPlayingMoviesUiState
 import com.mobile_app.project.ui.theme.Typography
 import com.mobile_app.project.ui.theme.primary_background
+import kotlin.random.Random
 
 @Preview(showBackground = true)
 @Composable
@@ -69,7 +76,7 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
         ) {
-            item { FeaturedMovie(navController) }
+            item { FeaturedMovie(viewModel, navController) }
             item { NowPlayingMovies(viewModel, navController) }
             item { PopularMovies(viewModel, navController) }
             item { TopRatedMovies(viewModel, navController) }
@@ -79,32 +86,58 @@ fun HomeScreen(
 }
 
 @Composable
-fun FeaturedMovie(navController: NavController) {
+fun FeaturedMovie(movieViewModel: MovieViewModel = hiltViewModel(), navController: NavController) {
+    val nowPlayingMoviesUiState = movieViewModel.nowPlayingMoviesUiState.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(300.dp)
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        // Image Box (Image should be behind the overlay)
-        ImageBox()
+        when (val state = nowPlayingMoviesUiState.value) {
+            is NowPlayingMoviesUiState.Loading -> Text(text = "Loading", color = Color.White)
+            is NowPlayingMoviesUiState.Error -> Text(text = "Error", color = Color.White)
+            is NowPlayingMoviesUiState.Success -> {
+                val movies = state.nowPlayingMovies.results
+                val randomMovie = movies[Random.nextInt(movies.size)]
+                val imageUrl = "https://image.tmdb.org/t/p/w500${randomMovie.posterPath}"
 
-        // Bottom Overlay Box moved lower but still overlays the image
-        BottomOverlayBox(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .offset(y = 48.dp)
-                .zIndex(1f),
-            navController = navController
-        )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                ) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(
+                            context = LocalContext.current
+                        ).data(imageUrl).crossfade(true).build(),
+                        contentDescription = randomMovie.overview,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
 
-        // "Watch Trailer" Button (Positioned at the top-right of the image)
-        WatchTrailerButton(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .offset(y = 150.dp)
-        )
+                BottomOverlayBox(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .offset(y = 48.dp)
+                        .zIndex(1f),
+                    navController = navController,
+                    movieTitle = randomMovie.title,
+                    voteCount = randomMovie.voteCount.toString(),
+                    releaseDate = randomMovie.releaseDate
+                )
+            }
+        }
+
+//        WatchTrailerButton(
+//            modifier = Modifier
+//                .align(Alignment.TopEnd)
+//                .offset(y = 150.dp)
+//        )
     }
+
+    Spacer(modifier = Modifier.height(40.dp))
 }
 
 @Composable
@@ -124,11 +157,17 @@ fun ImageBox() {
 }
 
 @Composable
-fun BottomOverlayBox(modifier: Modifier = Modifier, navController: NavController) {
+fun BottomOverlayBox(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    movieTitle: String,
+    voteCount: String,
+    releaseDate: String,
+) {
     Box(
         modifier = modifier
             .fillMaxWidth(0.85f)
-            .height(120.dp)
+            .height(140.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(Color.DarkGray)
     ) {
@@ -147,32 +186,17 @@ fun BottomOverlayBox(modifier: Modifier = Modifier, navController: NavController
                     style = Typography.bodySmall
                 )
                 Text(
-                    text = "EVIL DEAD RISE",
+                    text = movieTitle,
                     color = Color.White,
                     style = Typography.headlineMedium
                 )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text(
-                        text = "A",
-                        color = Color.White,
-                        style = Typography.bodySmall
-                    )
-                    Text(
-                        text = "•",
-                        color = Color.White,
-                        style = Typography.bodySmall
-                    )
-                    Text(
-                        text = "ENGLISH",
-                        color = Color.White,
-                        style = Typography.bodySmall
-                    )
-                }
                 Text(
-                    text = "HORROR",
+                    text = "$voteCount Votes",
+                    color = Color.White,
+                    style = Typography.bodySmall
+                )
+                Text(
+                    text = "Released on $releaseDate",
                     color = Color.White,
                     style = Typography.bodySmall
                 )
@@ -186,21 +210,15 @@ fun BottomOverlayBox(modifier: Modifier = Modifier, navController: NavController
                     onClick = { navController.navigate(MovieScreens.Detail.name) },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                     modifier = Modifier
-                        .height(36.dp)
-                        .width(80.dp)
+                        .height(50.dp)
+                        .width(90.dp)
                 ) {
                     Text(
-                        text = "Book",
+                        text = "Watch now",
                         color = Color.White,
                         style = Typography.labelMedium
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "2D,3D,4DX",
-                    color = Color.White,
-                    style = Typography.bodySmall
-                )
             }
         }
     }
