@@ -1,6 +1,5 @@
 package com.mobile_app.project.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,7 +31,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -42,7 +40,6 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mobile_app.project.MovieScreens
-import com.mobile_app.project.R
 import com.mobile_app.project.components.movies.NowPlayingMovies
 import com.mobile_app.project.components.movies.PopularMovies
 import com.mobile_app.project.components.movies.TopRatedMovies
@@ -123,6 +120,8 @@ fun FeaturedMovie(movieViewModel: MovieViewModel = hiltViewModel(), navControlle
                         .offset(y = 48.dp)
                         .zIndex(1f),
                     navController = navController,
+                    movieViewModel = movieViewModel,
+                    movieId = randomMovie.id,
                     movieTitle = randomMovie.title,
                     voteCount = randomMovie.voteCount.toString(),
                     releaseDate = randomMovie.releaseDate
@@ -141,25 +140,11 @@ fun FeaturedMovie(movieViewModel: MovieViewModel = hiltViewModel(), navControlle
 }
 
 @Composable
-fun ImageBox() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.evil_dead),
-            contentDescription = "Evil Dead",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
-    }
-}
-
-@Composable
 fun BottomOverlayBox(
     modifier: Modifier = Modifier,
+    movieViewModel: MovieViewModel = hiltViewModel(),
     navController: NavController,
+    movieId: Int,
     movieTitle: String,
     voteCount: String,
     releaseDate: String,
@@ -205,16 +190,18 @@ fun BottomOverlayBox(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                //Go to movie detail screen
                 Button(
-                    onClick = { navController.navigate(MovieScreens.Detail.name) },
+                    onClick = {
+                        movieViewModel.setSelectMovieId(movieId)
+                        navController.navigate(MovieScreens.Detail.name)
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                     modifier = Modifier
                         .height(50.dp)
                         .width(90.dp)
                 ) {
                     Text(
-                        text = "Watch now",
+                        text = "View details",
                         color = Color.White,
                         style = Typography.labelMedium
                     )
