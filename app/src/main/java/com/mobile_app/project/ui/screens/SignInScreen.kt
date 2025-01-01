@@ -104,8 +104,8 @@ fun SignInScreen(
                                     "Sign in successful",
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                onSignInSuccess()
                             }
-                            onSignInSuccess()
                         }.addOnFailureListener {
                             Toast.makeText(
                                 context,
