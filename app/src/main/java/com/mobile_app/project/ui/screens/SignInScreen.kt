@@ -42,7 +42,6 @@ fun SignInScreen(navController: NavController) {
     var showPassword by remember { mutableStateOf(false) }
 
     val errors = signInViewModel.errorMessages.value
-
     Surface {
         Column(
             modifier = Modifier
@@ -90,7 +89,6 @@ fun SignInScreen(navController: NavController) {
                 text = "Sign in",
                 modifier = Modifier.fillMaxWidth()
             )
-
             if (errors.isNotEmpty()) {
                 errors.forEach {
                     Text(

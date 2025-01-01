@@ -7,48 +7,18 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobile_app.project.MovieApplication
 import com.mobile_app.project.data.MovieRepository
-import com.mobile_app.project.model.ApiResponse
+import com.mobile_app.project.model.MovieDetailsUiState
+import com.mobile_app.project.model.NowPlayingMoviesUiState
+import com.mobile_app.project.model.PopularMoviesUiState
+import com.mobile_app.project.model.SelectedMovieIdUiState
+import com.mobile_app.project.model.TopRatedMoviesUiState
+import com.mobile_app.project.model.UpcomingMoviesUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-/**
- * UI state for Popular Movies
- */
-sealed interface PopularMoviesUiState {
-    data class Success(val popularMovies: ApiResponse) : PopularMoviesUiState
-    data object Error : PopularMoviesUiState
-    data object Loading : PopularMoviesUiState
-}
-
-/**
- * UI state for Now Playing Movies
- */
-sealed interface NowPlayingMoviesUiState {
-    data class Success(val nowPlayingMovies: ApiResponse) : NowPlayingMoviesUiState
-    data object Error : NowPlayingMoviesUiState
-    data object Loading : NowPlayingMoviesUiState
-}
-
-/**
- * UI state for Top Rated Movies
- */
-sealed interface TopRatedMoviesUiState {
-    data class Success(val topRatedMovies: ApiResponse) : TopRatedMoviesUiState
-    data object Error : TopRatedMoviesUiState
-    data object Loading : TopRatedMoviesUiState
-}
-
-/**
- * UI state for Upcoming Movies
- */
-sealed interface UpcomingMoviesUiState {
-    data class Success(val upcomingMovies: ApiResponse) : UpcomingMoviesUiState
-    data object Error : UpcomingMoviesUiState
-    data object Loading : UpcomingMoviesUiState
-}
 
 /**
  * ViewModel containing the app data and method to retrieve the data
@@ -76,6 +46,17 @@ class MovieViewModel @Inject constructor(private val movieRepository: MovieRepos
         MutableStateFlow<UpcomingMoviesUiState>(UpcomingMoviesUiState.Loading)
     val upcomingMoviesUiState: StateFlow<UpcomingMoviesUiState> = _upcomingMoviesUiState
 
+    // UI state for Movie Details
+    private val _movieDetailsUiState =
+        MutableStateFlow<MovieDetailsUiState>(MovieDetailsUiState.Loading)
+    val movieDetailsUiState: StateFlow<MovieDetailsUiState> = _movieDetailsUiState
+
+    // UI state for a clicked movie
+    private val _selectedMovieIdUiState =
+        MutableStateFlow(SelectedMovieIdUiState(id = 0))
+    val selectedMovieIdUiState: StateFlow<SelectedMovieIdUiState> =
+        _selectedMovieIdUiState
+
     init {
         getPopularMoviesFromViewModel()
         getNowPlayingMoviesFromViewModel()
@@ -98,6 +79,9 @@ class MovieViewModel @Inject constructor(private val movieRepository: MovieRepos
     }
 
 
+    /**
+     * Get popular movies from the [MovieRepository]
+     */
     private fun getPopularMoviesFromViewModel() {
         viewModelScope.launch {
             try {
@@ -113,6 +97,9 @@ class MovieViewModel @Inject constructor(private val movieRepository: MovieRepos
         }
     }
 
+    /**
+     * Get now playing movies from the [MovieRepository]
+     */
     private fun getNowPlayingMoviesFromViewModel() {
         viewModelScope.launch {
             try {
@@ -129,6 +116,9 @@ class MovieViewModel @Inject constructor(private val movieRepository: MovieRepos
         }
     }
 
+    /**
+     * Get top rated movies from the [MovieRepository]
+     */
     private fun getTopRatedMoviesFromViewModel() {
         viewModelScope.launch {
             try {
@@ -145,6 +135,9 @@ class MovieViewModel @Inject constructor(private val movieRepository: MovieRepos
         }
     }
 
+    /**
+     * Get upcoming movies from the [MovieRepository]
+     */
     private fun getUpcomingMoviesFromViewModel() {
         viewModelScope.launch {
             try {
@@ -157,6 +150,33 @@ class MovieViewModel @Inject constructor(private val movieRepository: MovieRepos
                 }
             } catch (e: Exception) {
                 UpcomingMoviesUiState.Error
+            }
+        }
+    }
+
+    fun setSelectMovieId(movieId: Int) {
+        _selectedMovieIdUiState.update { currentState ->
+            currentState.copy(
+                id = movieId
+            )
+        }
+    }
+
+    /**
+     * Get movie details from the [MovieRepository]
+     */
+    fun getMovieDetailsFromViewModel(movieId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = movieRepository.getMovieDetails(movieId)
+                if (response.isSuccessful && response.body() != null) {
+                    _movieDetailsUiState.value =
+                        MovieDetailsUiState.Success(response.body()!!)
+                } else {
+                    _movieDetailsUiState.value = MovieDetailsUiState.Error
+                }
+            } catch (e: Exception) {
+                MovieDetailsUiState.Error
             }
         }
     }

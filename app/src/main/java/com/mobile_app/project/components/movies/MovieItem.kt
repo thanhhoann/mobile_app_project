@@ -1,6 +1,7 @@
 package com.mobile_app.project.components.movies
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -19,17 +20,34 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.mobile_app.project.MovieScreens
 import com.mobile_app.project.model.Movie
+import com.mobile_app.project.ui.screens.MovieViewModel
+
+/*
+** About to remove
+ */
 
 @Composable
-fun MovieItem(movie: Movie) {
+fun MovieItem(
+    movie: Movie,
+    navController: NavController,
+    movieViewModel: MovieViewModel = hiltViewModel()
+) {
+
     Box(
         modifier = Modifier
             .width(120.dp)
             .height(180.dp)
             .clip(RoundedCornerShape(8.dp))
+            .clickable {
+                movieViewModel.setSelectMovieId(movie.id)
+                navController.navigate(MovieScreens.Detail.name)
+            },
     ) {
         val imageUrl = "https://image.tmdb.org/t/p/w500${movie.posterPath}"
 
