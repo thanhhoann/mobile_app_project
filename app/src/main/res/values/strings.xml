@@ -4,4 +4,6 @@
     <string name="signup">Create an account</string>
     <string name="signin">Sign In</string>
     <string name="movie_detail">View movie detail</string>
+    <string name="profile">Profile</string>
+    <string name="your_name">Your Name</string>
 </resources>
