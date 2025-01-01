@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mobile_app.project.MovieScreens
 import com.mobile_app.project.R
@@ -31,11 +33,15 @@ import com.mobile_app.project.components.ButtonVariants
 import com.mobile_app.project.components.StyledButton
 import com.mobile_app.project.components.StyledTextField
 import com.mobile_app.project.components.TextAnnotation
+import com.mobile_app.project.view_model.SignInViewModel
 
 @Composable
 fun SignInScreen(navController: NavController) {
+    val signInViewModel: SignInViewModel = viewModel()
+    val signInStates = signInViewModel.signInStates.collectAsState()
     var showPassword by remember { mutableStateOf(false) }
 
+    val errors = signInViewModel.errorMessages.value
     Surface {
         Column(
             modifier = Modifier
@@ -47,13 +53,13 @@ fun SignInScreen(navController: NavController) {
                 text = "Sign In", style = MaterialTheme.typography.headlineLarge
             )
             StyledTextField(
-                value = "",
-                onValueChange = { },
+                value = signInStates.value.email,
+                onValueChange = { signInViewModel.updateEmail(it) },
                 label = "Email"
             )
             StyledTextField(
-                value = "",
-                onValueChange = { },
+                value = signInStates.value.password ?: "",
+                onValueChange = { signInViewModel.updatePassword(it) },
                 keyboardType = if (showPassword) KeyboardType.Text else KeyboardType.Password,
                 visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
                 label = "Password",
@@ -78,23 +84,20 @@ fun SignInScreen(navController: NavController) {
             StyledButton(
                 color = ButtonVariants.Primary,
                 onClick = {
+                    signInViewModel.validateSignInFields()
                 },
                 text = "Sign in",
                 modifier = Modifier.fillMaxWidth()
             )
-//            Text(
-//                text = "Or", style = MaterialTheme.typography.bodySmall,
-//                textAlign = TextAlign.Center,
-//                modifier = Modifier.fillMaxWidth()
-//            )
-//
-//
-//            GoogleButton(
-//                modifier = Modifier.fillMaxWidth()
-//            )
-//            Text(
-//                text = "Do not have an account? Sign up now", style = MaterialTheme.typography.bodySmall
-//            )
+            if (errors.isNotEmpty()) {
+                errors.forEach {
+                    Text(
+                        text = it, style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
 
             AnnotatedText(
                 text = "Do not have an account? Sign up now",

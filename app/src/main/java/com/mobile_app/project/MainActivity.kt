@@ -13,7 +13,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -56,7 +55,6 @@ fun MovieApp() {
     )
 
     val viewModel: MovieViewModel = viewModel(factory = MovieViewModel.Factory)
-
     authService.init()
     MobileAppProjectTheme {
         Scaffold(
@@ -87,6 +85,10 @@ fun MovieApp() {
 
                 composable(route = MovieScreens.Detail.name) {
                     MovieScreen(viewModel, navController)
+                }
+
+                composable(route = MovieScreens.SignIn.name) {
+                    SignInScreen(navController)
                 }
 
                 composable(route = MovieScreens.SignIn.name) {
