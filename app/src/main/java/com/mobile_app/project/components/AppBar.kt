@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -70,22 +72,12 @@ fun MovieAppBar(
                         tint = on_background,
                         modifier = Modifier.size(24.dp)
                     )
-                    IconButton(
-                        onClick = {
-                            if (authService.isLoggedIn) {
-                                authService.signOut()
-                                navController.navigate(MovieScreens.SignIn.name)
-                            } else {
-                                navController.navigate(MovieScreens.SignIn.name)
-                            }
+                    if (!authService.isLoggedIn) {
+                        Button (
+                            onClick = { navController.navigate(MovieScreens.SignIn.name) }
+                        ) {
+                            Text("Sign In", style = MaterialTheme.typography.body1)
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Profile",
-                            tint = on_background,
-                            modifier = Modifier.size(24.dp)
-                        )
                     }
                 }
             }

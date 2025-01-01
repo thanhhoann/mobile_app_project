@@ -8,13 +8,23 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -60,11 +70,46 @@ class MainActivity : ComponentActivity() {
 
 }
 
+data class TopLevelRoute<T : Any>(val name: String, val route: T, val icon: ImageVector)
+
+val topLevelRoutes = listOf(
+    TopLevelRoute("Home", MovieScreens.Home.name, Icons.Filled.Home),
+    TopLevelRoute("Profile", MovieScreens.Profile.name, Icons.Filled.Person)
+)
+
 enum class MovieScreens(@StringRes val title: Int) {
     Home(title = R.string.home),
     SignUp(title = R.string.signup),
     SignIn(title = R.string.signin),
-    Detail(title = R.string.movie_detail)
+    Detail(title = R.string.movie_detail),
+    Profile(title = R.string.profile)
+}
+
+@Composable
+fun BottomBar(currentScreens: MovieScreens, navController: NavHostController) {
+    BottomNavigation {
+        topLevelRoutes.forEach { topLevelRoute ->
+            BottomNavigationItem(
+                modifier = Modifier.background(Color.Red),
+                icon = {
+                    Icon(
+                        topLevelRoute.icon,
+                        contentDescription = topLevelRoute.name,
+                        tint = Color.Black,
+                    )
+                },
+                label = { Text(topLevelRoute.name, color = Color.Black) },
+                selected = topLevelRoute.name == currentScreens.name,
+                onClick = {
+                    navController.navigate(topLevelRoute.route) {
+                        popUpTo(topLevelRoute.route)
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,6 +137,11 @@ fun MovieApp(authService: AuthService) {
                     canNavigateBack = navController.previousBackStackEntry != null,
                     navigateUp = { navController.popBackStack() }
                 )
+            },
+            bottomBar = {
+                if (authService.isLoggedIn) {
+                    BottomBar(currentScreen, navController)
+                }
             }
         ) { innerPadding ->
             NavHost(
