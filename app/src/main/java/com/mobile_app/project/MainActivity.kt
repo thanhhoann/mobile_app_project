@@ -34,6 +34,8 @@ import com.mobile_app.project.config.auth.AuthService
 import com.mobile_app.project.ui.screens.HomeScreen
 import com.mobile_app.project.ui.screens.MovieScreen
 import com.mobile_app.project.ui.screens.MovieViewModel
+import com.mobile_app.project.ui.screens.ProfileScreen
+import com.mobile_app.project.ui.screens.PromptNameScreen
 import com.mobile_app.project.ui.screens.SignInScreen
 import com.mobile_app.project.ui.screens.SignUp
 import com.mobile_app.project.ui.theme.MobileAppProjectTheme
@@ -82,7 +84,8 @@ enum class MovieScreens(@StringRes val title: Int) {
     SignUp(title = R.string.signup),
     SignIn(title = R.string.signin),
     Detail(title = R.string.movie_detail),
-    Profile(title = R.string.profile)
+    Profile(title = R.string.profile),
+    PromptName(title = R.string.your_name)
 }
 
 @Composable
@@ -139,7 +142,7 @@ fun MovieApp(authService: AuthService) {
                 )
             },
             bottomBar = {
-                if (authService.isLoggedIn) {
+                if (authService.isLoggedIn && currentScreen != MovieScreens.PromptName) {
                     BottomBar(currentScreen, navController)
                 }
             }
@@ -165,12 +168,28 @@ fun MovieApp(authService: AuthService) {
                     SignInScreen(
                         authService,
                         onSignInSuccess = {
-                            navController.navigate(MovieScreens.Home.name) {
-                                popUpTo(MovieScreens.Home.name) { inclusive = true }
+                            if (authService.getCurrentUser()?.displayName == null) {
+                                navController.navigate(MovieScreens.PromptName.name) {
+                                    popUpTo(MovieScreens.PromptName.name) { inclusive = true }
+                                }
+                            } else {
+                                navController.navigate(MovieScreens.Home.name) {
+                                    popUpTo(MovieScreens.Home.name) { inclusive = true }
+                                }
                             }
                         },
                         navController
                     )
+                }
+                composable(route = MovieScreens.Profile.name) {
+                    ProfileScreen(authService, onSignOut = {
+                        navController.navigate(MovieScreens.Home.name) {
+                            popUpTo(MovieScreens.Home.name) { inclusive = true }
+                        }
+                    })
+                }
+                composable(route = MovieScreens.PromptName.name) {
+                    PromptNameScreen(authService, navController)
                 }
             }
         }

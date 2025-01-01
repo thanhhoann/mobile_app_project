@@ -37,7 +37,8 @@ fun MovieAppBar(
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val username = authService.getCurrentUser()?.email?.substringBefore("@")
+    val user = authService.getCurrentUser()
+    val username = user?.displayName ?: user?.email?.substringBefore("@")
     CenterAlignedTopAppBar(
         title = {
             Row(
@@ -65,18 +66,19 @@ fun MovieAppBar(
                 horizontalArrangement = Arrangement.End,
             ) {
                 if (!canNavigateBack) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search",
-                        tint = on_background,
-                        modifier = Modifier.size(24.dp)
-                    )
                     if (!authService.isLoggedIn) {
                         Button (
                             onClick = { navController.navigate(MovieScreens.SignIn.name) }
                         ) {
                             Text("Sign In", style = MaterialTheme.typography.body1)
                         }
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search",
+                            tint = on_background,
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
                 }
             }
