@@ -8,21 +8,19 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -72,13 +70,6 @@ class MainActivity : ComponentActivity() {
 
 }
 
-data class TopLevelRoute<T : Any>(val name: String, val route: T, val icon: ImageVector)
-
-val topLevelRoutes = listOf(
-    TopLevelRoute("Home", MovieScreens.Home.name, Icons.Filled.Home),
-    TopLevelRoute("Profile", MovieScreens.Profile.name, Icons.Filled.Person)
-)
-
 enum class MovieScreens(@StringRes val title: Int) {
     Home(title = R.string.home),
     SignUp(title = R.string.signup),
@@ -90,29 +81,62 @@ enum class MovieScreens(@StringRes val title: Int) {
 
 @Composable
 fun BottomBar(currentScreens: MovieScreens, navController: NavHostController) {
-    BottomNavigation {
-        topLevelRoutes.forEach { topLevelRoute ->
-            BottomNavigationItem(
-                modifier = Modifier.background(Color.Red),
-                icon = {
-                    Icon(
-                        topLevelRoute.icon,
-                        contentDescription = topLevelRoute.name,
-                        tint = Color.Black,
-                    )
-                },
-                label = { Text(topLevelRoute.name, color = Color.Black) },
-                selected = topLevelRoute.name == currentScreens.name,
-                onClick = {
-                    navController.navigate(topLevelRoute.route) {
-                        popUpTo(topLevelRoute.route)
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+    NavigationBar {
+        NavigationBarItem(
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = "Home",
+                )
+            },
+            label = { Text(text = "Home") },
+            selected = currentScreens == MovieScreens.Home,
+            onClick = {
+                navController.navigate(MovieScreens.Home.name) {
+                    popUpTo(MovieScreens.Home.name) { inclusive = true }
                 }
-            )
-        }
+            }
+        )
+        NavigationBarItem(
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Profile",
+                )
+
+            },
+            label = { Text(text = "Profile") },
+            selected = currentScreens == MovieScreens.Profile,
+            onClick = {
+                navController.navigate(MovieScreens.Profile.name) {
+                    popUpTo(MovieScreens.Profile.name) { inclusive = true }
+                }
+            }
+        )
     }
+//    BottomNavigation {
+//        topLevelRoutes.forEach { topLevelRoute ->
+//            BottomNavigationItem(
+//                modifier = Modifier.background(Color.Red),
+//                icon = {
+//                    Icon(
+//                        topLevelRoute.icon,
+//                        contentDescription = topLevelRoute.name,
+//                        tint = Color.Black,
+//                    )
+//                },
+//                label = { Text(topLevelRoute.name, color = Color.Black) },
+//                selected = topLevelRoute.name == currentScreens.name,
+//                onClick = {
+//                    navController.navigate(topLevelRoute.route) {
+//                        popUpTo(topLevelRoute.route)
+//                        launchSingleTop = true
+//                        restoreState = true
+//                    }
+//                }
+//            )
+//        }
+//    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
