@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -34,6 +36,7 @@ import com.mobile_app.project.ui.screens.MovieScreen
 import com.mobile_app.project.ui.screens.MovieViewModel
 import com.mobile_app.project.ui.screens.ProfileScreen
 import com.mobile_app.project.ui.screens.PromptNameScreen
+import com.mobile_app.project.ui.screens.SearchScreen
 import com.mobile_app.project.ui.screens.SignInScreen
 import com.mobile_app.project.ui.screens.SignUp
 import com.mobile_app.project.ui.theme.MobileAppProjectTheme
@@ -76,11 +79,14 @@ enum class MovieScreens(@StringRes val title: Int) {
     SignIn(title = R.string.signin),
     Detail(title = R.string.movie_detail),
     Profile(title = R.string.profile),
-    PromptName(title = R.string.your_name)
+    PromptName(title = R.string.your_name),
+    Search(title = R.string.search)
 }
 
 @Composable
 fun BottomBar(currentScreens: MovieScreens, navController: NavHostController) {
+    val interactionSource = remember { MutableInteractionSource() }
+
     NavigationBar {
         NavigationBarItem(
             icon = {
@@ -95,7 +101,8 @@ fun BottomBar(currentScreens: MovieScreens, navController: NavHostController) {
                 navController.navigate(MovieScreens.Home.name) {
                     popUpTo(MovieScreens.Home.name) { inclusive = true }
                 }
-            }
+            },
+            interactionSource = interactionSource
         )
         NavigationBarItem(
             icon = {
@@ -111,7 +118,8 @@ fun BottomBar(currentScreens: MovieScreens, navController: NavHostController) {
                 navController.navigate(MovieScreens.Profile.name) {
                     popUpTo(MovieScreens.Profile.name) { inclusive = true }
                 }
-            }
+            },
+            interactionSource = interactionSource
         )
     }
 //    BottomNavigation {
@@ -186,6 +194,10 @@ fun MovieApp(authService: AuthService) {
 
                 composable(route = MovieScreens.Detail.name) {
                     MovieScreen(viewModel, navController)
+                }
+
+                composable(route = MovieScreens.Search.name) {
+                    SearchScreen()
                 }
 
                 composable(route = MovieScreens.SignIn.name) {
