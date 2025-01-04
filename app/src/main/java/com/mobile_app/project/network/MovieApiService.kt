@@ -1,7 +1,7 @@
 package com.mobile_app.project.network
 
-import com.mobile_app.project.model.MovieListsApiResponse
 import com.mobile_app.project.model.MovieDetailsResponse
+import com.mobile_app.project.model.MovieListsApiResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -38,5 +38,11 @@ interface MovieApiService {
         @Query("api_key") apiKey: String,
         @Query("language") language: String = "en-US"
     ): Response<MovieDetailsResponse>
+
+    @GET("search/movie")
+    suspend fun searchMovies(
+        @Query("api_key") apiKey: String,
+        @Query("query") query: String,
+    ): Response<MovieListsApiResponse>
 }
 

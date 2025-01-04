@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -121,6 +122,23 @@ fun BottomBar(currentScreens: MovieScreens, navController: NavHostController) {
             },
             interactionSource = interactionSource
         )
+        NavigationBarItem(
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search",
+                )
+
+            },
+            label = { Text(text = "Search") },
+            selected = currentScreens == MovieScreens.Search,
+            onClick = {
+                navController.navigate(MovieScreens.Search.name) {
+                    popUpTo(MovieScreens.Search.name) { inclusive = true }
+                }
+            },
+            interactionSource = interactionSource
+        )
     }
 //    BottomNavigation {
 //        topLevelRoutes.forEach { topLevelRoute ->
@@ -197,7 +215,7 @@ fun MovieApp(authService: AuthService) {
                 }
 
                 composable(route = MovieScreens.Search.name) {
-                    SearchScreen()
+                    SearchScreen(viewModel, navController)
                 }
 
                 composable(route = MovieScreens.SignIn.name) {

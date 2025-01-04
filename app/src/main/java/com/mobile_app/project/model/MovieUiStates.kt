@@ -45,6 +45,16 @@ sealed interface MovieDetailsUiState {
     data object Loading : MovieDetailsUiState
 }
 
+/**
+ * UI state for Search Movies
+ */
+sealed interface SearchMoviesUiState {
+    data class Success(val searchMovies: MovieListsApiResponse) : SearchMoviesUiState
+    data object Error : SearchMoviesUiState
+    data object Loading : SearchMoviesUiState
+    data object EmptySearch : SearchMoviesUiState
+}
+
 data class SelectedMovieIdUiState(
     val id: Int = 0
 )

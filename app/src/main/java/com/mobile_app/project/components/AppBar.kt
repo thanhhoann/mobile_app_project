@@ -1,6 +1,7 @@
 package com.mobile_app.project.components
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,6 +41,7 @@ fun MovieAppBar(
 ) {
     val user = authService.getCurrentUser()
     val username = user?.displayName ?: user?.email?.substringBefore("@")
+    val interactionSource = remember { MutableInteractionSource() }
     CenterAlignedTopAppBar(
         title = {
             Row(
@@ -67,18 +70,24 @@ fun MovieAppBar(
             ) {
                 if (!canNavigateBack) {
                     if (!authService.isLoggedIn) {
-                        Button (
-                            onClick = { navController.navigate(MovieScreens.SignIn.name) }
+                        Button(
+                            onClick = { navController.navigate(MovieScreens.SignIn.name) },
+                            interactionSource = interactionSource
                         ) {
                             Text("Sign In", style = MaterialTheme.typography.bodySmall)
                         }
                     } else {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "Search",
-                            tint = on_background,
-                            modifier = Modifier.size(24.dp)
-                        )
+                        IconButton(
+                            onClick = { navController.navigate(MovieScreens.Search.name) },
+                            interactionSource = interactionSource
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = "Search",
+                                tint = on_background,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -86,7 +95,10 @@ fun MovieAppBar(
         modifier = modifier,
         navigationIcon = {
             if (canNavigateBack) {
-                IconButton(onClick = navigateUp) {
+                IconButton(
+                    onClick = navigateUp,
+                    interactionSource = interactionSource
+                ) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Back"

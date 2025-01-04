@@ -6,4 +6,5 @@
     <string name="movie_detail">View movie detail</string>
     <string name="profile">Profile</string>
     <string name="your_name">Your Name</string>
+    <string name="search">Search</string>
 </resources>
