@@ -10,6 +10,7 @@ import com.mobile_app.project.data.MovieRepository
 import com.mobile_app.project.model.MovieDetailsUiState
 import com.mobile_app.project.model.NowPlayingMoviesUiState
 import com.mobile_app.project.model.PopularMoviesUiState
+import com.mobile_app.project.model.SearchMoviesUiState
 import com.mobile_app.project.model.SelectedMovieIdUiState
 import com.mobile_app.project.model.TopRatedMoviesUiState
 import com.mobile_app.project.model.UpcomingMoviesUiState
@@ -56,6 +57,11 @@ class MovieViewModel @Inject constructor(private val movieRepository: MovieRepos
         MutableStateFlow(SelectedMovieIdUiState(id = 0))
     val selectedMovieIdUiState: StateFlow<SelectedMovieIdUiState> =
         _selectedMovieIdUiState
+
+    // UI state for search movies
+    private val _searchMoviesUiState =
+        MutableStateFlow<SearchMoviesUiState>(SearchMoviesUiState.EmptySearch)
+    val searchMoviesUiState: StateFlow<SearchMoviesUiState> = _searchMoviesUiState
 
     init {
         getPopularMoviesFromViewModel()
@@ -177,6 +183,24 @@ class MovieViewModel @Inject constructor(private val movieRepository: MovieRepos
                 }
             } catch (e: Exception) {
                 MovieDetailsUiState.Error
+            }
+        }
+    }
+
+    /**
+     * Search movies from the [MovieRepository]
+     */
+    fun searchMoviesFromViewModel(query: String) {
+        viewModelScope.launch {
+            try {
+                val response = movieRepository.searchMovies(query)
+                if (response.isSuccessful && response.body() != null) {
+                    _searchMoviesUiState.value = SearchMoviesUiState.Success(response.body()!!)
+                } else {
+                    _searchMoviesUiState.value = SearchMoviesUiState.Error
+                }
+            } catch (e: Exception) {
+                SearchMoviesUiState.Error
             }
         }
     }

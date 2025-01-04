@@ -197,7 +197,7 @@ fun MovieApp(authService: AuthService) {
                 }
 
                 composable(route = MovieScreens.Search.name) {
-                    SearchScreen()
+                    SearchScreen(viewModel, navController)
                 }
 
                 composable(route = MovieScreens.SignIn.name) {

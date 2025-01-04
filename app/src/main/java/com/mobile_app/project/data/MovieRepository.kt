@@ -20,6 +20,7 @@ interface MovieRepository {
     suspend fun getTopRatedMovies(page: Int): Response<MovieListsApiResponse>
     suspend fun getUpcomingMovies(page: Int): Response<MovieListsApiResponse>
     suspend fun getMovieDetails(movieId: Int): Response<MovieDetailsResponse>
+    suspend fun searchMovies(query: String): Response<MovieListsApiResponse>
 }
 
 /**
@@ -58,6 +59,12 @@ class DefaultMovieRepository @Inject constructor(private val movieApiService: Mo
         movieApiService.getMovieDetails(
             movieId = movieId,
             apiKey = tmdbApiKey,
+        )
+
+    override suspend fun searchMovies(query: String): Response<MovieListsApiResponse> =
+        movieApiService.searchMovies(
+            apiKey = tmdbApiKey,
+            query = query
         )
 }
 
