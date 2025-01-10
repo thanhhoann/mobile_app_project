@@ -1,5 +1,6 @@
 package com.mobile_app.project.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,6 +45,7 @@ import com.mobile_app.project.components.movies.NowPlayingMovies
 import com.mobile_app.project.components.movies.PopularMovies
 import com.mobile_app.project.components.movies.TopRatedMovies
 import com.mobile_app.project.components.movies.UpcomingMovies
+import com.mobile_app.project.config.auth.AuthService
 import com.mobile_app.project.model.NowPlayingMoviesUiState
 import com.mobile_app.project.ui.theme.Typography
 import com.mobile_app.project.ui.theme.primary_background
@@ -58,6 +60,7 @@ fun HomeScreenPreview() {
 
 @Composable
 fun HomeScreen(
+    authService: AuthService,
     viewModel: MovieViewModel,
     navController: NavController,
     contentPadding: Any? = null,
@@ -73,17 +76,17 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp)
         ) {
-            item { FeaturedMovie(viewModel, navController) }
-            item { NowPlayingMovies(viewModel, navController) }
-            item { PopularMovies(viewModel, navController) }
-            item { TopRatedMovies(viewModel, navController) }
-            item { UpcomingMovies(viewModel, navController) }
+            item { FeaturedMovie(authService, viewModel, navController) }
+            item { NowPlayingMovies(authService,viewModel, navController) }
+            item { PopularMovies(authService,viewModel, navController) }
+            item { TopRatedMovies(authService,viewModel, navController) }
+            item { UpcomingMovies(authService,viewModel, navController) }
         }
     }
 }
 
 @Composable
-fun FeaturedMovie(movieViewModel: MovieViewModel = hiltViewModel(), navController: NavController) {
+fun FeaturedMovie(authService: AuthService, movieViewModel: MovieViewModel = hiltViewModel(), navController: NavController) {
     val nowPlayingMoviesUiState = movieViewModel.nowPlayingMoviesUiState.collectAsState()
     Box(
         modifier = Modifier
@@ -115,6 +118,7 @@ fun FeaturedMovie(movieViewModel: MovieViewModel = hiltViewModel(), navControlle
                 }
 
                 BottomOverlayBox(
+                    authService,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .offset(y = 48.dp)
@@ -141,6 +145,7 @@ fun FeaturedMovie(movieViewModel: MovieViewModel = hiltViewModel(), navControlle
 
 @Composable
 fun BottomOverlayBox(
+    authService: AuthService,
     modifier: Modifier = Modifier,
     movieViewModel: MovieViewModel = hiltViewModel(),
     navController: NavController,
@@ -149,6 +154,7 @@ fun BottomOverlayBox(
     voteCount: String,
     releaseDate: String,
 ) {
+    val context = LocalContext.current
     Box(
         modifier = modifier
             .fillMaxWidth(0.85f)
@@ -192,8 +198,13 @@ fun BottomOverlayBox(
             ) {
                 Button(
                     onClick = {
-                        movieViewModel.setSelectMovieId(movieId)
-                        navController.navigate(MovieScreens.Detail.name)
+                        if (!authService.isLoggedIn) {
+                            navController.navigate(MovieScreens.SignIn.name)
+                            Toast.makeText(context, "Please sign in to view details", Toast.LENGTH_SHORT).show()
+                        } else {
+                            movieViewModel.setSelectMovieId(movieId)
+                            navController.navigate(MovieScreens.Detail.name)
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                     modifier = Modifier

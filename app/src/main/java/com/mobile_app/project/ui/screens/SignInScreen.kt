@@ -104,6 +104,7 @@ fun SignInScreen(
                                     "Sign in successful",
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                authService.setCurrentUser(it.result.user)
                                 onSignInSuccess()
                             }
                         }.addOnFailureListener {

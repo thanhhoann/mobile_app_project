@@ -153,7 +153,7 @@ fun MovieApp(authService: AuthService) {
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable(route = MovieScreens.Home.name) {
-                    HomeScreen(viewModel, navController)
+                    HomeScreen(authService,viewModel, navController)
                 }
 
                 composable(route = MovieScreens.SignUp.name) {

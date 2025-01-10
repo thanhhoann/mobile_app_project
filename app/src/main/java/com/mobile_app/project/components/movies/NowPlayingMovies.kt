@@ -1,5 +1,6 @@
 package com.mobile_app.project.components.movies
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +35,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mobile_app.project.MovieScreens
+import com.mobile_app.project.config.auth.AuthService
 import com.mobile_app.project.model.NowPlayingMoviesUiState
 import com.mobile_app.project.ui.screens.MovieViewModel
 import com.mobile_app.project.ui.theme.Typography
@@ -42,9 +44,11 @@ import com.mobile_app.project.ui.theme.primary
 
 @Composable
 fun NowPlayingMovies(
+    authService: AuthService,
     movieViewModel: MovieViewModel = hiltViewModel(), navController: NavController
 ) {
     val nowPlayingMoviesUiState by movieViewModel.nowPlayingMoviesUiState.collectAsState()
+    val context = LocalContext.current
 
     Column(modifier = Modifier.padding(16.dp)) {
         Row(
@@ -79,8 +83,13 @@ fun NowPlayingMovies(
                                 .height(180.dp)
                                 .clip(RoundedCornerShape(8.dp))
                                 .clickable {
-                                    movieViewModel.setSelectMovieId(movie.id)
-                                    navController.navigate(MovieScreens.Detail.name)
+                                    if (!authService.isLoggedIn) {
+                                        navController.navigate(MovieScreens.SignIn.name)
+                                        Toast.makeText(context, "Please sign in to view details", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        movieViewModel.setSelectMovieId(movie.id)
+                                        navController.navigate(MovieScreens.Detail.name)
+                                    }
                                 },
                         ) {
                             val imageUrl = "https://image.tmdb.org/t/p/w500${movie.posterPath}"
