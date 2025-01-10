@@ -21,6 +21,10 @@ class AuthService {
         return currentUser
     }
 
+    fun setCurrentUser(user: FirebaseUser?) {
+        currentUser = user
+    }
+
     fun signOut() {
         firebaseAuth.signOut()
         currentUser = null
